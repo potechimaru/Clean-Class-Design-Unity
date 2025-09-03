@@ -1,9 +1,10 @@
+using State.PlayerState;
 using UnityEngine;
 
 namespace State.PlayerState
 {
     public interface IStateController
     {
-        void ChangeState(StateKey key);
+        public void ChangeState(StateKey key);
     }
 }

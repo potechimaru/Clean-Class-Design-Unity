@@ -6,39 +6,35 @@ namespace State.PlayerState
 {
     public class WalkState : IPlayerState
     {
-        private readonly PlayerView _view;
-        private readonly PlayerModel _model;
-        private readonly InputService _input;
+        private readonly PlayerMVCFacade _playerMVCFacade;
         private readonly IStateController _stateController;
-        public WalkState(PlayerView view, PlayerModel model, InputService input, IStateController stateController)
+        public WalkState(PlayerMVCFacade playerMVCFacade,IStateController stateController)
         {
-            _view = view;
-            _model = model;
-            _input = input;
             _stateController = stateController;
+            _playerMVCFacade = playerMVCFacade;
         }
 
         public async UniTask Enter() 
         { 
             Debug.Log("Enter Walk State");
-            _view.Animator?.CrossFade("Walk", 0.1f); 
+            _playerMVCFacade.PlayerAnimation("Walk", 0.1f);
         }
 
         public async UniTask Tick()
         {
-            var mv = _input.MoveVec;
+            var mv = _playerMVCFacade.MoveVec;
             if (mv.sqrMagnitude <= 0.01f) 
             { 
                 _stateController.ChangeState(StateKey.Idle); 
                 return; 
             }
-            if (_input.RunHeld) 
+            if (_playerMVCFacade.RunHeld) 
             { 
                 _stateController.ChangeState(StateKey.Run);
                 return; 
             }
 
-            _view.ApplyPlanarSpeed(mv.normalized, _model.WalkSpeed);
+            _playerMVCFacade.ApplyPlanarSpeed(mv.normalized, _playerMVCFacade.WalkSpeed);
             //_view.CommitMovement(Time.deltaTime);
         }
         public async UniTask Exit()

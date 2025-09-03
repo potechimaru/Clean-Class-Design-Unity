@@ -17,10 +17,15 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<PlayerStateRunner>(Lifetime.Singleton)
                .As<State.PlayerState.IStateController>();
 
+        builder.Register<EnemyManager>(Lifetime.Singleton)
+               .As<ITickable>();
+
         builder.Register<PlayerModel>(Lifetime.Singleton);
         builder.RegisterComponent(_playerView);
         builder.Register<PlayerController>(Lifetime.Singleton);
         builder.Register<InputService>(Lifetime.Singleton);
+
+        builder.Register<PlayerMVCFacade>(Lifetime.Singleton);
     }
 
 }

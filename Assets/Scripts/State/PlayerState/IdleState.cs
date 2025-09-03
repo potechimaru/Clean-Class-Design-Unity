@@ -5,29 +5,27 @@ namespace State.PlayerState
 {
     public class IdleState : IPlayerState
     {
-        private readonly PlayerView _view;
-        private readonly PlayerModel _model;
-        private readonly InputService _input;
+        private readonly PlayerMVCFacade _playerMVCFacade;
         private readonly IStateController _stateController;
-        public IdleState(PlayerView view, PlayerModel model, InputService input, IStateController stateController)
+        public IdleState(PlayerMVCFacade playerMVCFacade, IStateController stateController)
         {
-            _view = view;
-            _model = model;
-            _input = input;
             _stateController = stateController;
+            _playerMVCFacade = playerMVCFacade;
         }
 
         public async UniTask Enter()
         {
             Debug.Log("Enter Idle State");
+            _playerMVCFacade.PlayerAnimation("Idle", 0.1f);
+            _playerMVCFacade.Velocity = Vector3.zero;
         }
 
         public async UniTask Tick()
         {
             Debug.Log("Idle Tick");
-            var mv = _input.MoveVec;
+            var mv = _playerMVCFacade.MoveVec;
             if (mv.sqrMagnitude > 0.01f)
-                _stateController.ChangeState(_input.RunHeld ? StateKey.Run : StateKey.Walk);
+                _stateController.ChangeState(_playerMVCFacade.RunHeld ? StateKey.Run : StateKey.Walk);
         }
 
         public async UniTask Exit()

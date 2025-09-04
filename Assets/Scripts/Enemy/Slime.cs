@@ -1,26 +1,39 @@
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Pool;
 using State.EnemyState;
 
 public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 {
-    private CharacterController _cc;
+    private NavMeshAgent _agent;
+    private Animator _anim;
     private SlimeConfig _config;
     private Transform _target;
-    private Animator _anim;
 
     private float _hp;
-    private Vector3 _velocity;
+    private IObjectPool<Slime> _pool; // プール参照
+
+    [SerializeField] private float _attackRange = 1.5f;
 
     public EnemyStateRunner StateMachine { get; private set; }
     public bool IsDead { get; private set; }
     public Vector3 Position => transform.position;
 
-    void Awake()
+    private void Awake()
     {
-        _cc = GetComponent<CharacterController>();
+        _agent = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
         StateMachine = new EnemyStateRunner();
+
+        _agent.updateRotation = true;
+        _agent.updatePosition = true;
+        _agent.autoBraking = true;
     }
+
+    /// <summary>
+    /// プール側から呼ばれる：返却先を保持
+    /// </summary>
+    public void SetPool(IObjectPool<Slime> pool) => _pool = pool;
 
     public void Initialize(SlimeConfig config, Transform target)
     {
@@ -28,12 +41,17 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
         _target = target;
         _hp = _config.maxHp;
         IsDead = false;
-        _velocity = Vector3.zero;
 
-        // State を登録
+        _agent.enabled = true;
+        _agent.speed = _config.moveSpeed;
+        _agent.stoppingDistance = _attackRange;
+        _agent.isStopped = false;
+
+        UpdateDestination();
+
         StateMachine.AddState(StateKey.Walk, new EnemyWalkState(this, _anim, StateMachine));
         StateMachine.AddState(StateKey.Attack, new EnemyAttackState(this, _anim, StateMachine));
-
+        StateMachine.AddState(StateKey.Dead, new EnemyDeadState(this, _anim, StateMachine));
         StateMachine.ChangeState(StateKey.Walk);
     }
 
@@ -47,47 +65,58 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     public void Tick(float deltaTime)
     {
         if (IsDead || _config == null) return;
+
+        if (_target && _agent && !_agent.isStopped)
+        {
+            UpdateDestination();
+        }
+
         StateMachine.Tick(deltaTime);
     }
 
-    public void MoveTowardsTarget(float dt)
-    {
-        if (_target == null) return;
-
-        var dir = (_target.position - transform.position);
-        dir.y = 0f;
-
-        if (dir.magnitude > 0.5f)
-        {
-            var planar = dir.normalized * _config.moveSpeed;
-            _velocity.x = planar.x;
-            _velocity.z = planar.z;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 0.15f);
-        }
-        else
-        {
-            _velocity.x = 0f;
-            _velocity.z = 0f;
-        }
-
-        if (_cc.isGrounded && _velocity.y < 0f)
-            _velocity.y = -2f;
-        _velocity.y += Physics.gravity.y * dt;
-        _cc.Move(_velocity * dt);
-    }
+    public void MoveToTarget(float _) => UpdateDestination();
 
     public bool CanAttackTarget()
     {
-        if (_target == null) return false;
-        return Vector3.Distance(transform.position, _target.position) < 1.5f;
+        if (_target == null || _agent == null) return false;
+        if (_agent.pathPending) return false;
+
+        return _agent.remainingDistance <= _agent.stoppingDistance;
+    }
+
+    private void UpdateDestination()
+    {
+        if (_agent != null && _agent.enabled && _target != null)
+        {
+            _agent.SetDestination(_target.position);
+        }
     }
 
     private void Die()
     {
         IsDead = true;
+
+        if (_agent != null)
+        {
+            _agent.isStopped = true;
+            _agent.ResetPath();
+        }
+
         StateMachine.ChangeState(StateKey.Dead);
+
         Debug.Log("Slime died!");
-        Destroy(gameObject, 1f);
+
+        // Destroyせずプールに返却
+        _pool?.Release(this);
+    }
+
+    // プール返却時に呼ばれる
+    private void OnDisable()
+    {
+        if (_agent != null)
+        {
+            _agent.ResetPath();
+            _agent.isStopped = true;
+        }
     }
 }
-

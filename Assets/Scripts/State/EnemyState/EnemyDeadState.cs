@@ -3,13 +3,13 @@ using UnityEngine;
 namespace State.EnemyState
 {
 
-    public class EnemyWalkState : IEnemyState
+    public class EnemyDeadState : IEnemyState
     {
         private readonly IEnemy _slime;
         private readonly Animator _anim;
         private readonly IStateController _runner;
 
-        public EnemyWalkState(Slime slime, Animator anim, IStateController runner)
+        public EnemyDeadState(Slime slime, Animator anim, IStateController runner)
         {
             _slime = slime;
             _anim = anim;
@@ -18,18 +18,12 @@ namespace State.EnemyState
 
         public void Enter()
         {
-            _anim.CrossFade("Walk", 0.1f);
+            _anim.CrossFade("Dead", 0.05f);
         }
 
         public void Tick(float dt)
         {
-            _slime.MoveToTarget(dt);
 
-            // ğŒ‚Å‘JˆÚ—áFUŒ‚‰Â”\‚È‚çAttack‚Ö
-            if (_slime.CanAttackTarget())
-            {
-                _runner.ChangeState(StateKey.Attack);
-            }
         }
 
         public void Exit() { }

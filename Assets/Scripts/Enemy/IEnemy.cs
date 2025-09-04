@@ -8,5 +8,5 @@ public interface IEnemy
 
     bool CanAttackTarget();
 
-    void MoveTowardsTarget(float dt);
+    void MoveToTarget(float dt);
 }

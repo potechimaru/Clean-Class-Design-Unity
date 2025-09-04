@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IEnemy
 {
-    void Initialize(SlimeConfig config, Transform target);
+    void Initialize(IEnemyConfig config, Transform target);
     void TakeDamage(float amount);
     bool IsDead { get; }
 

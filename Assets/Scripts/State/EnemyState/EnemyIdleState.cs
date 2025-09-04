@@ -3,13 +3,13 @@ using UnityEngine;
 namespace State.EnemyState
 {
 
-    public class EnemyAttackState : IEnemyState
+    public class EnemyIdleState : IEnemyState
     {
         private readonly IEnemy _enemy;
         private readonly Animator _anim;
         private readonly IStateController _runner;
 
-        public EnemyAttackState(IEnemy enemy, Animator anim, IStateController runner)
+        public EnemyIdleState(IEnemy enemy, Animator anim, IStateController runner)
         {
             _enemy = enemy;
             _anim = anim;
@@ -18,15 +18,12 @@ namespace State.EnemyState
 
         public void Enter()
         {
-            _anim.CrossFade("Attack", 0.05f);
+            _anim.CrossFade("Idle", 0.05f);
         }
 
         public void Tick(float dt)
         {
-            if (!_enemy.CanAttackTarget())
-            {
-                _runner.ChangeState(StateKey.Walk);
-            }
+
         }
 
         public void Exit() { }

@@ -5,13 +5,13 @@ namespace State.EnemyState
 
     public class EnemyDeadState : IEnemyState
     {
-        private readonly IEnemy _slime;
+        private readonly IEnemy _enemy;
         private readonly Animator _anim;
         private readonly IStateController _runner;
 
-        public EnemyDeadState(Slime slime, Animator anim, IStateController runner)
+        public EnemyDeadState(IEnemy enemy, Animator anim, IStateController runner)
         {
-            _slime = slime;
+            _enemy = enemy;
             _anim = anim;
             _runner = runner;
         }

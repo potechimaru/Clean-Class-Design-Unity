@@ -13,6 +13,7 @@ namespace State.GameState
 
         public async UniTask Enter()
         {
+
             //Debug.Log("GameOpeningState: Enter");
         }
 

@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.Pool;
 using State.EnemyState;
 
-public class Slime : MonoBehaviour, IEnemy, IEnemyTick
+public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
 {
     private NavMeshAgent _agent;
     private Animator _anim;
@@ -11,7 +11,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     private Transform _target;
 
     private float _hp;
-    private IObjectPool<Slime> _pool; // プール参照
+    private IObjectPool<Turtle> _pool; // プール参照
 
     [SerializeField] private float _attackRange = 1.5f;
 
@@ -33,7 +33,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     /// <summary>
     /// プール側から呼ばれる：返却先を保持
     /// </summary>
-    public void SetPool(IObjectPool<Slime> pool) => _pool = pool;
+    public void SetPool(IObjectPool<Turtle> pool) => _pool = pool;
 
     public void Initialize(IEnemyConfig config, Transform target)
     {
@@ -53,7 +53,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
         StateMachine.AddState(StateKey.Walk, new EnemyWalkState(this, _anim, StateMachine));
         StateMachine.AddState(StateKey.Attack, new EnemyAttackState(this, _anim, StateMachine));
         StateMachine.AddState(StateKey.Dead, new EnemyDeadState(this, _anim, StateMachine));
-        StateMachine.ChangeState(StateKey.Walk);
+        StateMachine.ChangeState(StateKey.Idle);
     }
 
     public void TakeDamage(float amount)
@@ -105,7 +105,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 
         StateMachine.ChangeState(StateKey.Dead);
 
-        Debug.Log("Slime died!");
+        Debug.Log("Turtle died!");
 
         // Destroyせずプールに返却
         _pool?.Release(this);

@@ -1,10 +1,10 @@
 using UnityEngine;
 using VContainer;
 
-public class SlimeFactory : MonoBehaviour, IEnemyFactory
+public class TurtleFactory : MonoBehaviour, IEnemyFactory
 {
-    [SerializeField] private SlimePool _pool;
-    [SerializeField] private SlimeConfig _config;
+    [SerializeField] private TurtlePool _pool;
+    [SerializeField] private TurtleConfig _config;
     [SerializeField] private Transform _defaultTarget;
     [Inject] private EnemyManager _enemyManager;
 

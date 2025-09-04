@@ -7,6 +7,19 @@ using State.PlayerState;
 public class GameLifetimeScope : LifetimeScope
 {
     [SerializeField] private PlayerView _playerView;
+
+    [SerializeField] private SlimeFactory _slimeFactory;
+    [SerializeField] private TurtleFactory _turtleFactory;
+
+    [SerializeField] private SlimePool _slimePool;
+    [SerializeField] private TurtlePool _turtlePool;    
+
+    [SerializeField] private WaveRunner _waveRunner;
+
+    [SerializeField] private SlimeConfig _slimeConfig;
+    [SerializeField] private TurtleConfig _turtleConfig;
+    [SerializeField] private WaveConfig _waveConfig;
+
     protected override void Configure(IContainerBuilder builder)
     {
         // GameState
@@ -26,6 +39,22 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<InputService>(Lifetime.Singleton);
 
         builder.Register<PlayerMVCFacade>(Lifetime.Singleton);
+
+        // Factory
+        builder.RegisterComponent(_slimeFactory);
+        builder.RegisterComponent(_turtleFactory);
+
+        // Pool
+        builder.RegisterComponent(_slimePool);
+        builder.RegisterComponent(_turtlePool);
+
+        // Wave 
+        builder.RegisterComponent(_waveRunner);
+
+        // Config
+        builder.Register<SlimeConfig>(Lifetime.Singleton);
+        builder.Register<TurtleConfig>(Lifetime.Singleton);
+
     }
 
 }

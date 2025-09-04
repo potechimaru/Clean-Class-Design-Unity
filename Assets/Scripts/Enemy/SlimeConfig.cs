@@ -1,11 +1,14 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Enemies/SlimeConfig")]
-public class SlimeConfig : ScriptableObject
+public class SlimeConfig : ScriptableObject, IEnemyConfig
 {
     [Header("Status")]
-    public float maxHp = 20f;
-    public float moveSpeed = 2.0f;
-    public float aggroDistance = 12f;
+    [SerializeField] private float maxHp = 10f;
+    [SerializeField] private float moveSpeed = 2.0f;
+    [SerializeField] private float aggroDistance = 8f;
 
+    public float MaxHp => maxHp;
+    public float MoveSpeed => moveSpeed;
+    public float AggroDistance => aggroDistance;
 }

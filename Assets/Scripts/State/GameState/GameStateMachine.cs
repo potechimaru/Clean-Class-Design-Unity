@@ -19,7 +19,7 @@ namespace State.GameState
 
         public void Start()
         {
-            ChangeState(StateKey.Opening);
+            ChangeState(StateKey.Play);
         }
 
         public void Tick()

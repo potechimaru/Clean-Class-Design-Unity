@@ -23,7 +23,7 @@ namespace State.PlayerState
 
         public void Start()
         {
-            //Debug.Log("PlayerStateRunner Start");
+            Debug.Log("PlayerStateRunner Start");
             ChangeState(StateKey.Idle);
         }
 

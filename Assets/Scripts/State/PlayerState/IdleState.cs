@@ -15,14 +15,14 @@ namespace State.PlayerState
 
         public async UniTask Enter()
         {
-            Debug.Log("Enter Idle State");
+            //Debug.Log("Enter Idle State");
             _playerMVCFacade.PlayerAnimation("Idle", 0.1f);
             _playerMVCFacade.Velocity = Vector3.zero;
         }
 
         public async UniTask Tick()
         {
-            Debug.Log("Idle Tick");
+            //Debug.Log("Idle Tick");
             var mv = _playerMVCFacade.MoveVec;
             if (mv.sqrMagnitude > 0.01f)
                 _stateController.ChangeState(_playerMVCFacade.RunHeld ? StateKey.Run : StateKey.Walk);

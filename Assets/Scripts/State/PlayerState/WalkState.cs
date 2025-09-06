@@ -16,7 +16,7 @@ namespace State.PlayerState
 
         public async UniTask Enter() 
         { 
-            Debug.Log("Enter Walk State");
+            //Debug.Log("Enter Walk State");
             _playerMVCFacade.PlayerAnimation("Walk", 0.1f);
         }
 

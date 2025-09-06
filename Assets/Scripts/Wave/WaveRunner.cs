@@ -40,7 +40,7 @@ public class WaveRunner : IStartable, IDisposable
 
         foreach (var enemy in _waveConfig.enemies)
         {
-            float wait = enemy.spawnTime - (Time.time - startTime);
+            float wait = enemy.spawnTime + 1f - (Time.time - startTime);
             if (wait > 0f)
             {
                 await UniTask.Delay(

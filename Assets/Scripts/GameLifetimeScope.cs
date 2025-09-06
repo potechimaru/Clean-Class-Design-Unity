@@ -1,8 +1,9 @@
-using VContainer;
-using VContainer.Unity;
-using UnityEngine;
+using State.EnemyState;
 using State.GameState;
 using State.PlayerState;
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 public class GameLifetimeScope : LifetimeScope
 {
@@ -12,9 +13,7 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField] private TurtleFactory _turtleFactory;
 
     [SerializeField] private SlimePool _slimePool;
-    [SerializeField] private TurtlePool _turtlePool;    
-
-    [SerializeField] private WaveRunner _waveRunner;
+    [SerializeField] private TurtlePool _turtlePool;
 
     [SerializeField] private SlimeConfig _slimeConfig;
     [SerializeField] private TurtleConfig _turtleConfig;
@@ -24,14 +23,22 @@ public class GameLifetimeScope : LifetimeScope
     {
         // GameState
         builder.RegisterEntryPoint<GameStateMachine>(Lifetime.Singleton)
-                .As<State.GameState.IStateController>();
+               .As<State.GameState.IStateController>();
 
         // PlayerState
         builder.RegisterEntryPoint<PlayerStateRunner>(Lifetime.Singleton)
                .As<State.PlayerState.IStateController>();
 
         builder.Register<EnemyManager>(Lifetime.Singleton)
-               .As<ITickable>();
+               .As<ITickable>().AsSelf();
+
+        // EnemyState
+        builder.Register<EnemyStateRunner>(Lifetime.Transient).As<State.EnemyState.IStateController>().AsSelf();
+
+        builder.Register<EnemyIdleState>(Lifetime.Transient);
+        builder.Register<EnemyWalkState>(Lifetime.Transient);
+        builder.Register<EnemyAttackState>(Lifetime.Transient);
+        builder.Register<EnemyDeadState>(Lifetime.Transient);
 
         builder.Register<PlayerModel>(Lifetime.Singleton);
         builder.RegisterComponent(_playerView);
@@ -49,12 +56,12 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponent(_turtlePool);
 
         // Wave 
-        builder.RegisterComponent(_waveRunner);
+        builder.Register<WaveRunner>(Lifetime.Singleton)
+               .As<IStartable>();
 
         // Config
-        builder.Register<SlimeConfig>(Lifetime.Singleton);
-        builder.Register<TurtleConfig>(Lifetime.Singleton);
-
+        builder.RegisterInstance(_slimeConfig);
+        builder.RegisterInstance(_turtleConfig);
+        builder.RegisterInstance(_waveConfig);
     }
-
 }

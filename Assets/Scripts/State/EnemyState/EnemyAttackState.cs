@@ -14,6 +14,7 @@ namespace State.EnemyState
             _enemy = enemy;
             _anim = anim;
             _runner = runner;
+            Debug.Log(_enemy == null);
         }
 
         public void Enter()

@@ -1,7 +1,8 @@
+using State.EnemyState;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
-using State.EnemyState;
+using VContainer;
 
 public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 {
@@ -12,6 +13,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 
     private float _hp;
     private IObjectPool<Slime> _pool; // プール参照
+    [Inject] private IObjectResolver _resolver;
 
     [SerializeField] private float _attackRange = 1.5f;
 
@@ -22,13 +24,23 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        Debug.Log($"{name} Awake, agent={_agent}", this);
+
         _anim = GetComponent<Animator>();
         StateMachine = new EnemyStateRunner();
 
-        _agent.updateRotation = true;
-        _agent.updatePosition = true;
-        _agent.autoBraking = true;
+        if (_agent != null)
+        {
+            _agent.updateRotation = true;
+            _agent.updatePosition = true;
+            _agent.autoBraking = true;
+        }
+        else
+        {
+            Debug.LogError($"{name} に NavMeshAgent がありません！", this);
+        }
     }
+
 
     /// <summary>
     /// プール側から呼ばれる：返却先を保持
@@ -49,6 +61,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 
         UpdateDestination();
 
+        StateMachine = _resolver.Resolve<EnemyStateRunner>();
         StateMachine.AddState(StateKey.Idle, new EnemyIdleState(this, _anim, StateMachine));
         StateMachine.AddState(StateKey.Walk, new EnemyWalkState(this, _anim, StateMachine));
         StateMachine.AddState(StateKey.Attack, new EnemyAttackState(this, _anim, StateMachine));

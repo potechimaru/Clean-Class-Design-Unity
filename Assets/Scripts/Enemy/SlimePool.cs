@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using VContainer;
 
 public class SlimePool : MonoBehaviour
 {
@@ -8,15 +9,18 @@ public class SlimePool : MonoBehaviour
     [SerializeField] private int _maxSize = 100;
 
     private IObjectPool<Slime> _pool;
+    [Inject] private IObjectResolver _resolver;
 
-    private void Awake()
+    private void Start()
     {
         _pool = new ObjectPool<Slime>(
             createFunc: () =>
             {
+                Debug.Log($"Create Slime, resolver={_resolver}");
                 var slime = Instantiate(_prefab, transform);
                 slime.gameObject.SetActive(false);
                 slime.SetPool(_pool);
+                _resolver.Inject(slime);
                 return slime;
             },
             actionOnGet: (slime) =>

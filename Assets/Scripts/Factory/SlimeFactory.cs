@@ -3,8 +3,8 @@ using VContainer;
 
 public class SlimeFactory : MonoBehaviour, IEnemyFactory
 {
-    [SerializeField] private SlimePool _pool;
-    [SerializeField] private SlimeConfig _config;
+    [Inject] private SlimePool _pool;
+    [Inject] private SlimeConfig _config;
     [SerializeField] private Transform _defaultTarget;
     [Inject] private EnemyManager _enemyManager;
 

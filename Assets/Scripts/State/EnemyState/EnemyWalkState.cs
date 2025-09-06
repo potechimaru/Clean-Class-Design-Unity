@@ -23,7 +23,7 @@ namespace State.EnemyState
 
         public void Tick(float dt)
         {
-            Debug.Log("EnemyWalkState Tick");
+            //Debug.Log("EnemyWalkState Tick");
             _enemy.MoveToTarget(dt);
 
             // ğŒ‚Å‘JˆÚ—áFUŒ‚‰Â”\‚È‚çAttack‚Ö

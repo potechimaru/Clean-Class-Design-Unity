@@ -5,6 +5,7 @@ namespace State.EnemyState
         Idle,
         Walk,
         Attack,
-        Dead
+        Dead,
+        Hurt
     }
 }

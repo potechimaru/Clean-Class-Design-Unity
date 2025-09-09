@@ -10,6 +10,7 @@ public class SlimePool : MonoBehaviour
 
     private IObjectPool<Slime> _pool;
     [Inject] private IObjectResolver _resolver;
+    [Inject] private PlayerMVCFacade _playerMVCFacade;
 
     private void Start()
     {
@@ -46,7 +47,7 @@ public class SlimePool : MonoBehaviour
     {
         var slime = _pool.Get();
         slime.transform.SetPositionAndRotation(pos, rot);
-        slime.Initialize(config, target);
+        slime.Initialize(config, target, _playerMVCFacade);
         return slime;
     }
 

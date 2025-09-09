@@ -26,7 +26,7 @@ namespace State.EnemyState
             //Debug.Log("EnemyWalkState Tick");
             _enemy.MoveToTarget(dt);
 
-            // ğŒ‚Å‘JˆÚ—áFUŒ‚‰Â”\‚È‚çAttack‚Ö
+            // UŒ‚‰Â”\‚È‚çAttack‚Ö
             if (_enemy.CanAttackTarget())
             {
                 _runner.ChangeState(StateKey.Attack);

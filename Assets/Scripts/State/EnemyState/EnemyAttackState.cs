@@ -14,12 +14,12 @@ namespace State.EnemyState
             _enemy = enemy;
             _anim = anim;
             _runner = runner;
-            Debug.Log(_enemy == null);
+            // Debug.Log(_enemy == null);
         }
 
         public void Enter()
         {
-            _anim.CrossFade("Attack", 0.05f);
+            _anim.CrossFade("Attack01_event", 0.05f);
         }
 
         public void Tick(float dt)

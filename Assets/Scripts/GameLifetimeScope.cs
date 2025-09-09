@@ -19,6 +19,8 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField] private TurtleConfig _turtleConfig;
     [SerializeField] private WaveConfig _waveConfig;
 
+    [SerializeField] private CameraFollow _cameraFollow;
+
     protected override void Configure(IContainerBuilder builder)
     {
         // GameState
@@ -42,7 +44,7 @@ public class GameLifetimeScope : LifetimeScope
 
         builder.Register<PlayerModel>(Lifetime.Singleton);
         builder.RegisterComponent(_playerView);
-        builder.Register<PlayerController>(Lifetime.Singleton);
+        builder.Register<PlayerController>(Lifetime.Singleton).As<ITickable>().AsSelf(); ;
         builder.Register<InputService>(Lifetime.Singleton);
 
         builder.Register<PlayerMVCFacade>(Lifetime.Singleton);
@@ -63,5 +65,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(_slimeConfig);
         builder.RegisterInstance(_turtleConfig);
         builder.RegisterInstance(_waveConfig);
+
+        builder.RegisterComponent(_cameraFollow).As<ITickable>().AsSelf();
     }
 }

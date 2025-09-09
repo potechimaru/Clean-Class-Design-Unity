@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
 using State.EnemyState;
+using Cysharp.Threading.Tasks;
 
 public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
 {
@@ -9,6 +10,7 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     private Animator _anim;
     private IEnemyConfig _config;
     private Transform _target;
+    private PlayerMVCFacade _playerMVCFacade;
 
     private float _hp;
     private IObjectPool<Turtle> _pool; // ÉvÅ[ÉãéQè∆
@@ -35,10 +37,11 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     /// </summary>
     public void SetPool(IObjectPool<Turtle> pool) => _pool = pool;
 
-    public void Initialize(IEnemyConfig config, Transform target)
+    public void Initialize(IEnemyConfig config, Transform target, PlayerMVCFacade playerMVCFacade)
     {
         _config = config;
         _target = target;
+        _playerMVCFacade = playerMVCFacade;
         _hp = _config.MaxHp;
         IsDead = false;
 
@@ -56,11 +59,11 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
         StateMachine.ChangeState(StateKey.Idle);
     }
 
-    public void TakeDamage(float amount)
+    public async UniTask TakeDamage(float amount)
     {
         if (IsDead) return;
         _hp -= amount;
-        if (_hp <= 0f) Die();
+        if (_hp <= 0f) await Die();
     }
 
     public void Tick(float deltaTime)
@@ -93,8 +96,9 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
         }
     }
 
-    private void Die()
+    private async UniTask Die()
     {
+        Debug.Log($"{name} is dying.", this);
         IsDead = true;
 
         if (_agent != null)
@@ -103,7 +107,13 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
             _agent.ResetPath();
         }
 
+
         StateMachine.ChangeState(StateKey.Dead);
+
+        await UniTask.Yield();
+
+        while (_anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+            await UniTask.Yield();
 
         Debug.Log("Turtle died!");
 

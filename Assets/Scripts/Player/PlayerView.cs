@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 
@@ -5,6 +6,9 @@ public class PlayerView : MonoBehaviour
 {
     [Inject] private PlayerModel _model;
     [SerializeField] private Animator _anim;
+    [SerializeField] private float _attackRange = 2f;     // ‘O•û‹——£
+    [SerializeField] private float _attackRadius = 1f;    // ‹…‚Ì”¼Œa
+    [SerializeField] private LayerMask _enemyLayer;
 
     private CharacterController _cc;
 
@@ -50,6 +54,36 @@ public class PlayerView : MonoBehaviour
         _model.Velocity = velocity;
 
     }
+
+    /// <summary>
+    /// ‘O•û‚Ì‹…”ÍˆÍ‚É‚¢‚éIEnemy‚ðŽæ“¾
+    /// </summary>
+    public List<IEnemy> GetEnemies()
+    {
+        Vector3 center = transform.position + transform.forward * _attackRange;
+        center.y += 0.5f;
+        Collider[] hits = Physics.OverlapSphere(center, _attackRadius, _enemyLayer);
+
+        var enemies = new List<IEnemy>();
+        foreach (var hit in hits)
+        {
+            if (hit.TryGetComponent<IEnemy>(out var enemy))
+            {
+                enemies.Add(enemy);
+            }
+        }
+
+        return enemies;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Vector3 center = transform.position + transform.forward * _attackRange;
+        center.y += 0.5f;
+        Gizmos.DrawWireSphere(center, _attackRadius);
+    }
+
 
     public Animator Animator => _anim;
 }

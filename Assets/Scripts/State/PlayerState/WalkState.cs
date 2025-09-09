@@ -1,45 +1,53 @@
 using Cysharp.Threading.Tasks;
-using State.GameState;
+using System;
 using UnityEngine;
+using UniRx;
 
 namespace State.PlayerState
 {
     public class WalkState : IPlayerState
     {
-        private readonly PlayerMVCFacade _playerMVCFacade;
+        private readonly PlayerMVCFacade _facade;
         private readonly IStateController _stateController;
-        public WalkState(PlayerMVCFacade playerMVCFacade,IStateController stateController)
+        private readonly Func<Vector2> _moveGetter;
+        private readonly Func<bool> _runGetter;
+        private readonly Func<bool> _attackGetter;
+
+        public WalkState(PlayerMVCFacade facade, IStateController stateController,
+                         Func<Vector2> moveGetter, Func<bool> runGetter, Func<bool> attackGetter)
         {
+            _facade = facade;
             _stateController = stateController;
-            _playerMVCFacade = playerMVCFacade;
+            _moveGetter = moveGetter;
+            _runGetter = runGetter;
+            _attackGetter = attackGetter;
         }
 
-        public async UniTask Enter() 
-        { 
-            //Debug.Log("Enter Walk State");
-            _playerMVCFacade.PlayerAnimation("Walk", 0.1f);
+        public async UniTask Enter()
+        {
+            _facade.PlayAnimation("Walk01", 0.1f);
         }
 
         public async UniTask Tick()
         {
-            var mv = _playerMVCFacade.MoveVec;
-            if (mv.sqrMagnitude <= 0.01f) 
-            { 
-                _stateController.ChangeState(StateKey.Idle); 
-                return; 
+            var mv = _moveGetter();
+            if (mv.sqrMagnitude <= 0.01f)
+            {
+                _stateController.ChangeState(StateKey.Idle);
+                return;
             }
-            if (_playerMVCFacade.RunHeld) 
-            { 
+            if (_runGetter())
+            {
                 _stateController.ChangeState(StateKey.Run);
-                return; 
+                return;
             }
-
-            _playerMVCFacade.ApplyPlanarSpeed(mv.normalized, _playerMVCFacade.WalkSpeed);
-            //_view.CommitMovement(Time.deltaTime);
+            _facade.ApplyPlanarSpeed(mv.normalized, _facade.WalkSpeed);
+            if (_attackGetter())
+            {
+                _stateController.ChangeState(StateKey.Attack);
+            }
         }
-        public async UniTask Exit()
-        {
 
-        }
+        public async UniTask Exit() { }
     }
 }

@@ -1,36 +1,45 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
+using System;
+using UniRx;
 
 namespace State.PlayerState
 {
     public class IdleState : IPlayerState
     {
-        private readonly PlayerMVCFacade _playerMVCFacade;
+        private readonly PlayerMVCFacade _facade;
         private readonly IStateController _stateController;
-        public IdleState(PlayerMVCFacade playerMVCFacade, IStateController stateController)
+        private readonly Func<Vector2> _moveGetter;
+        private readonly Func<bool> _runGetter;
+        private readonly Func<bool> _attackGetter;
+
+        public IdleState(PlayerMVCFacade facade, IStateController stateController,
+                         Func<Vector2> moveGetter, Func<bool> runGetter, Func<bool> attackGetter)
         {
+            _facade = facade;
             _stateController = stateController;
-            _playerMVCFacade = playerMVCFacade;
+            _moveGetter = moveGetter;
+            _runGetter = runGetter;
+            _attackGetter = attackGetter;
         }
 
         public async UniTask Enter()
         {
-            //Debug.Log("Enter Idle State");
-            _playerMVCFacade.PlayerAnimation("Idle", 0.1f);
-            _playerMVCFacade.Velocity = Vector3.zero;
+            _facade.PlayAnimation("Idle_Normal", 0.1f);
+            _facade.Velocity = Vector3.zero;
         }
 
         public async UniTask Tick()
         {
-            //Debug.Log("Idle Tick");
-            var mv = _playerMVCFacade.MoveVec;
+            var mv = _moveGetter();
             if (mv.sqrMagnitude > 0.01f)
-                _stateController.ChangeState(_playerMVCFacade.RunHeld ? StateKey.Run : StateKey.Walk);
+                _stateController.ChangeState(_runGetter() ? StateKey.Run : StateKey.Walk);
+            if (_attackGetter())
+            {
+                _stateController.ChangeState(StateKey.Attack);
+            }
         }
 
-        public async UniTask Exit()
-        {
-
-        }
+        public async UniTask Exit() { }
     }
 }

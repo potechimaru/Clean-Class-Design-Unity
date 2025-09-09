@@ -18,7 +18,7 @@ namespace State.EnemyState
 
         public void Enter()
         {
-            _anim.CrossFade("Dead", 0.05f);
+            _anim.CrossFade("Die", 0f);
         }
 
         public void Tick(float dt)

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Pool;
+using VContainer;
 
 public class TurtlePool : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class TurtlePool : MonoBehaviour
     [SerializeField] private int _defaultCapacity = 5;
     [SerializeField] private int _maxSize = 50;
 
+    [Inject] private PlayerMVCFacade _playerMVCFacade;
     private IObjectPool<Turtle> _pool;
 
     private void Awake()
@@ -43,7 +45,7 @@ public class TurtlePool : MonoBehaviour
     {
         var turtle = _pool.Get();
         turtle.transform.SetPositionAndRotation(pos, rot);
-        turtle.Initialize(config, target);
+        turtle.Initialize(config, target, _playerMVCFacade);
         return turtle;
     }
 

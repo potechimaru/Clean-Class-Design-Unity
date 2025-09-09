@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edfa1e3c3b7a9c749a5946b01e14fccf, type: 3}
   m_Name: SlimeConfig
   m_EditorClassIdentifier: 
-  maxHp: 10
+  maxHp: 100
   moveSpeed: 2
   aggroDistance: 8

@@ -4,6 +4,7 @@ namespace State.PlayerState
     {
         Idle,
         Walk,
-        Run
+        Run,
+        Attack
     }
 }

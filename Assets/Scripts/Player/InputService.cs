@@ -1,3 +1,5 @@
+using System;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,12 +7,24 @@ public class InputService
 {
     public PlayerInputActions InputActions { get; } = new();
 
+    public IObservable<Vector2> MoveStream { get; }
+    public IObservable<bool> RunStream { get; }
+    public IObservable<Unit> AttackStream { get; }
+
     public InputService()
     {
         InputActions.Enable();
+
+        MoveStream = Observable.EveryUpdate()
+            .Select(_ => InputActions.Player.Move.ReadValue<Vector2>())
+            .DistinctUntilChanged();
+
+        RunStream = Observable.EveryUpdate()
+            .Select(_ => InputActions.Player.Run.IsPressed())
+            .DistinctUntilChanged();
+
+        AttackStream = Observable.EveryUpdate()
+            .Where(_ => InputActions.Player.Attack.WasPerformedThisFrame())
+            .AsUnitObservable();
     }
-
-    public Vector2 MoveVec => InputActions.Player.Move.ReadValue<Vector2>();
-
-    public bool RunHeld => InputActions.Player.Run.IsPressed();
 }

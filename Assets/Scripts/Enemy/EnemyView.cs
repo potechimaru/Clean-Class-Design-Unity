@@ -1,8 +1,11 @@
+using TMPro;
 using UnityEngine;
+using VContainer;
 
 public class EnemyView : MonoBehaviour
 {
-    [SerializeField] private HPBar hpBar;  // Inspectorでアタッチ
+    [SerializeField] private HPBar _hpBar;
+    [Inject] private DamageTextPool _damageTextPool;
 
     private IEnemy _enemy;
     private float _maxHp;
@@ -14,7 +17,8 @@ public class EnemyView : MonoBehaviour
     {
         _enemy = enemy;
         _maxHp = maxHp;
-        hpBar.SetFill(1f); // 初期化時は満タン
+        _hpBar.SetFill(1f);
+
     }
 
     /// <summary>
@@ -23,6 +27,12 @@ public class EnemyView : MonoBehaviour
     public void UpdateHp(float currentHp)
     {
         float ratio = currentHp / _maxHp;
-        hpBar.SetFill(ratio);
+        _hpBar.SetFill(ratio);
+    }
+
+    public void ShowDamage(int damage, Vector3 worldPos)
+    {
+        //Debug.Log(_damageTextPool == null);
+        _damageTextPool.Spawn(damage, worldPos);
     }
 }

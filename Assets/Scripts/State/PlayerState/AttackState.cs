@@ -1,61 +1,58 @@
 using Cysharp.Threading.Tasks;
-using UnityEngine;
+using State.PlayerState;
 using System;
-using UniRx;
+using UnityEngine;
+using static Unity.Collections.Unicode;
 
-namespace State.PlayerState
+public class AttackState : IPlayerState
 {
-    public class AttackState : IPlayerState
+    private readonly PlayerMVCFacade _facade;
+    private readonly IStateController _stateController;
+
+    private int comboStep = 1;
+
+    public AttackState(PlayerMVCFacade facade, IStateController stateController)
     {
-        private readonly PlayerMVCFacade _facade;
-        private readonly IStateController _stateController;
-        private readonly Func<Vector2> _moveGetter;
-        private readonly Func<bool> _runGetter;
-        private readonly Func<bool> _attackGetter;
+        _facade = facade;
+        _stateController = stateController;
+    }
 
-        public AttackState(PlayerMVCFacade facade, IStateController stateController,
-                         Func<Vector2> moveGetter, Func<bool> runGetter, Func<bool> attackGetter)
+    public async UniTask Enter()
+    {
+        (_stateController as PlayerStateRunner).AttackPressed = false;
+        string animName = comboStep switch
         {
-            _facade = facade;
-            _stateController = stateController;
-            _moveGetter = moveGetter;
-            _runGetter = runGetter;
-            _attackGetter = attackGetter;
-        }
+            1 => "Attack01_event",
+            2 => "Attack02_event",
+            3 => "Attack03_event",
+            _ => "Attack01_event"
+        };
 
-        public async UniTask Enter()
-        {
-            _facade.PlayAnimation("Attack01", 0f);
-            _facade.Velocity = Vector3.zero;
+        _facade.PlayAnimation(animName, 0f);
+        _facade.Velocity = Vector3.zero;
 
+        await UniTask.Yield();
+
+        var anim = _facade.Animator;
+        while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
             await UniTask.Yield();
 
-            var anim = _facade.Animator;
-            var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            float halfTime = stateInfo.length * 0.5f;
-
-            await UniTask.Delay(TimeSpan.FromSeconds(halfTime));
-
-            _facade.AttackEnemies();
-
-            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
-                await UniTask.Yield();
-
+        // コンボ受付があれば次へ
+        if ((_stateController as PlayerStateRunner).AttackPressed && comboStep < 3)
+        {
+            comboStep++;
+            _stateController.ChangeState(StateKey.Attack);
+        }
+        else
+        {
+            comboStep = 1; // リセット
             _stateController.ChangeState(StateKey.Idle);
         }
+    }
 
-
-
-        public async UniTask Tick()
-        {
-            await UniTask.CompletedTask;
-        }
-
-        public async UniTask Exit() 
-        {
-            // 入力フラグを消費
-            (_stateController as PlayerStateRunner).AttackPressed = false;
-            await UniTask.CompletedTask; 
-        }
+    public async UniTask Tick() { await UniTask.CompletedTask; }
+    public async UniTask Exit()
+    {
+        await UniTask.CompletedTask;
     }
 }

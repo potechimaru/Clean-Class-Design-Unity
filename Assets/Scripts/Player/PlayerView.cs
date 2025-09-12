@@ -76,6 +76,15 @@ public class PlayerView : MonoBehaviour
         return enemies;
     }
 
+    public void AttackEnemies()
+    {
+        var enemies = GetEnemies();
+        foreach (var enemy in enemies)
+        {
+            enemy.TakeDamage(_model.AttackDamage);
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

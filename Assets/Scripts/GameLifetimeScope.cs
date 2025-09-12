@@ -14,12 +14,14 @@ public class GameLifetimeScope : LifetimeScope
 
     [SerializeField] private SlimePool _slimePool;
     [SerializeField] private TurtlePool _turtlePool;
+    [SerializeField] private DamageTextPool _damageTextPool;
 
     [SerializeField] private SlimeConfig _slimeConfig;
     [SerializeField] private TurtleConfig _turtleConfig;
     [SerializeField] private WaveConfig _waveConfig;
 
     [SerializeField] private CameraFollow _cameraFollow;
+
 
     protected override void Configure(IContainerBuilder builder)
     {
@@ -56,6 +58,7 @@ public class GameLifetimeScope : LifetimeScope
         // Pool
         builder.RegisterComponent(_slimePool);
         builder.RegisterComponent(_turtlePool);
+        builder.RegisterComponent(_damageTextPool);
 
         // Wave 
         builder.Register<WaveRunner>(Lifetime.Singleton)

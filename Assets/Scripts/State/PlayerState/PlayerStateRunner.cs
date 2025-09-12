@@ -28,7 +28,7 @@ namespace State.PlayerState
             _states[StateKey.Idle] = new IdleState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
             _states[StateKey.Walk] = new WalkState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
             _states[StateKey.Run] = new RunningState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
-            _states[StateKey.Attack] = new AttackState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
+            _states[StateKey.Attack] = new AttackState(_facade, this);
         }
 
         public void Start()

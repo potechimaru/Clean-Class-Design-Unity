@@ -57,7 +57,11 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
         _hp = _config.MaxHp;
         IsDead = false;
 
-        EnemyView?.Initialize(this, _config.MaxHp);
+        if (EnemyView != null)
+        {
+            _resolver.Inject(EnemyView);
+            EnemyView.Initialize(this, _config.MaxHp);
+        }
 
         _agent.enabled = true;
         _agent.speed = _config.MoveSpeed;
@@ -84,6 +88,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
         _hp -= amount;
 
         EnemyView?.UpdateHp(_hp);
+        EnemyView?.ShowDamage((int)amount, transform.position);
 
         if (_hp <= 0f)
         {

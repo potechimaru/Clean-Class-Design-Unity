@@ -43,6 +43,12 @@ public class PlayerMVCFacade
         }
     }
 
+    public void UpdateMoneyPossesion(int amount)
+    {
+        _model.MoneyPossession += amount;
+        _view.UpdateMoneyPossession(_model.MoneyPossession);
+    }   
+
     public Animator Animator => _view.Animator;
 
     public PlayerView View => _view;
@@ -63,13 +69,21 @@ public class PlayerMVCFacade
     public void TakeDamage (float amount)
     {
         _model.TakeDamage(amount);
+        _view.UpdateHpBar();
+        // Debug.Log(_model.NormalizedHp);
     }
 
+    public int MoneyPossession => _model.MoneyPossession;
+
+
+
     // -------------------
-    // InputService のストリームを公開
+    // InputServiceのストリームを公開
     // -------------------
     public IObservable<Vector2> MoveStream => _input.MoveStream;
     public IObservable<bool> RunStream => _input.RunStream;
     public IObservable<Unit> AttackStream => _input.AttackStream;
+    public IObservable<bool> ShieldStream => _input.ShieldStream;
+    public IObservable<Unit> SubmitStream => _input.SubmitStream;
 
 }

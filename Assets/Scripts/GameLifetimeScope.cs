@@ -11,16 +11,26 @@ public class GameLifetimeScope : LifetimeScope
 
     [SerializeField] private SlimeFactory _slimeFactory;
     [SerializeField] private TurtleFactory _turtleFactory;
+    [SerializeField] private CoinFactory _coinFactory;
+    [SerializeField] private SlashEffectFactory _slashEffectFactory;
 
     [SerializeField] private SlimePool _slimePool;
     [SerializeField] private TurtlePool _turtlePool;
     [SerializeField] private DamageTextPool _damageTextPool;
+    [SerializeField] private CoinPool _coinPool;
+    [SerializeField] private SlashEffectPool _slashEffectPool;
 
     [SerializeField] private SlimeConfig _slimeConfig;
     [SerializeField] private TurtleConfig _turtleConfig;
     [SerializeField] private WaveConfig _waveConfig;
+    [SerializeField] private UpgradeCostConfig _upgradeCostConfig;
 
     [SerializeField] private CameraFollow _cameraFollow;
+
+    [SerializeField] private Chicken _chicken;
+
+    [SerializeField] private AttackUpgradeButton _attackUpgradeButton;
+    [SerializeField] private ShieldUpgradeButton _shieldUpgradeButton;
 
 
     protected override void Configure(IContainerBuilder builder)
@@ -54,11 +64,15 @@ public class GameLifetimeScope : LifetimeScope
         // Factory
         builder.RegisterComponent(_slimeFactory);
         builder.RegisterComponent(_turtleFactory);
+        builder.RegisterComponent(_coinFactory);
+        builder.RegisterComponent(_slashEffectFactory);
 
         // Pool
         builder.RegisterComponent(_slimePool);
         builder.RegisterComponent(_turtlePool);
         builder.RegisterComponent(_damageTextPool);
+        builder.RegisterComponent(_coinPool);
+        builder.RegisterComponent(_slashEffectPool);
 
         // Wave 
         builder.Register<WaveRunner>(Lifetime.Singleton)
@@ -68,7 +82,17 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(_slimeConfig);
         builder.RegisterInstance(_turtleConfig);
         builder.RegisterInstance(_waveConfig);
+        builder.RegisterInstance(_upgradeCostConfig);
 
         builder.RegisterComponent(_cameraFollow).As<ITickable>().AsSelf();
+
+        builder.RegisterComponent(_chicken);
+
+        builder .Register<UpgradeManager>(Lifetime.Singleton).AsSelf();
+
+        builder.RegisterComponent(_attackUpgradeButton);
+        builder.RegisterComponent(_shieldUpgradeButton);
+
+
     }
 }

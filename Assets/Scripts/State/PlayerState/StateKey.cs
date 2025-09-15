@@ -5,6 +5,7 @@ namespace State.PlayerState
         Idle,
         Walk,
         Run,
-        Attack
+        Attack,
+        Shield
     }
 }

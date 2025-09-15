@@ -8,9 +8,12 @@ public class SlimeConfig : ScriptableObject, IEnemyConfig
     [SerializeField] private float moveSpeed = 2.0f;
     [SerializeField] private float aggroDistance = 8f;
     [SerializeField] private float attackDamage = 10f;
+    [SerializeField] private int dropMoney = 5;
 
     public float MaxHp => maxHp;
     public float MoveSpeed => moveSpeed;
     public float AggroDistance => aggroDistance;
     public float AttackDamage => attackDamage;
+
+    public int DropMoney => dropMoney;
 }

@@ -20,6 +20,8 @@ public class PlayerModel
     public bool IsDead => CurrentHp <= 0f;
     public float NormalizedHp => MaxHp > 0f ? CurrentHp / MaxHp : 0f;
 
+    public int MoneyPossession { get; set; } = 0;
+
     public PlayerModel()
     {
         CurrentHp = MaxHp;
@@ -50,7 +52,7 @@ public class PlayerModel
 
         var before = CurrentHp;
         CurrentHp = Mathf.Max(0f, CurrentHp - Mathf.Max(0f, amount));
-        Debug.Log(CurrentHp);
+        //Debug.Log(CurrentHp);
         return before - CurrentHp;
     }
 

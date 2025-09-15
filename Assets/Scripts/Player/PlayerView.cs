@@ -1,14 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
+using TMPro;
 
 public class PlayerView : MonoBehaviour
 {
     [Inject] private PlayerModel _model;
+    [Inject] private SlashEffectFactory _slashEffectFactory;
     [SerializeField] private Animator _anim;
     [SerializeField] private float _attackRange = 2f;     // ‘O•û‹——£
     [SerializeField] private float _attackRadius = 1f;    // ‹…‚Ì”¼Œa
     [SerializeField] private LayerMask _enemyLayer;
+    [SerializeField] private HPBar _hpBar;
+    [SerializeField] private TextMeshProUGUI _moneyUI;
 
     private CharacterController _cc;
 
@@ -83,6 +87,25 @@ public class PlayerView : MonoBehaviour
         {
             enemy.TakeDamage(_model.AttackDamage);
         }
+
+        Vector3 effectPos = transform.position + transform.forward * _attackRange * 0.5f;
+        Quaternion effectRot = Quaternion.LookRotation(transform.forward);
+        _slashEffectFactory.Create(effectPos, effectRot);
+    }
+
+    public void UpdateHpBar()
+    {
+        if (_hpBar != null)
+        {
+            //Debug.Log(_model.NormalizedHp);
+            _hpBar.SetFill(_model.NormalizedHp);
+        }
+    }
+
+    public void UpdateMoneyPossession(int amount)
+    {
+
+        _moneyUI.text = _model.MoneyPossession.ToString("N0");
     }
 
     void OnDrawGizmosSelected()

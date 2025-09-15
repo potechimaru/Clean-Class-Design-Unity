@@ -4,4 +4,5 @@ public interface IEnemyConfig
     float MoveSpeed { get; }
     float AggroDistance { get; }
     float AttackDamage { get; }
+    int DropMoney { get; }
 }

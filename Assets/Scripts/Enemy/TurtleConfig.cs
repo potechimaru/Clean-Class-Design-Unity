@@ -8,10 +8,13 @@ public class TurtleConfig : ScriptableObject, IEnemyConfig
     [SerializeField] private float moveSpeed = 1.0f;
     [SerializeField] private float aggroDistance = 12f;
     [SerializeField] private float attackDamage = 5f;
+    [SerializeField] private int dropMoney = 3;
 
     public float MaxHp => maxHp;
     public float MoveSpeed => moveSpeed;
     public float AggroDistance => aggroDistance;
 
     public float AttackDamage => attackDamage;
+
+    public int DropMoney => dropMoney;
 }

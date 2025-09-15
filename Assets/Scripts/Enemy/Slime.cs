@@ -16,6 +16,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     private float _hp;
     private IObjectPool<Slime> _pool; // プール参照
     [Inject] private IObjectResolver _resolver;
+    [Inject] private CoinFactory _coinFactory;
 
     [SerializeField] private float _attackRange = 1.5f;
 
@@ -132,7 +133,7 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 
     private async UniTask Die()
     {
-        Debug.Log($"{name} is dying.", this);
+        //Debug.Log($"{name} is dying.", this);
         IsDead = true;
 
         if (_agent != null)
@@ -150,6 +151,8 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
             await UniTask.Yield();
 
         Debug.Log("Slime died!");
+
+        _coinFactory.Create(transform.position, _config.DropMoney);
 
         // Destroyせずプールに返却
         _pool?.Release(this);

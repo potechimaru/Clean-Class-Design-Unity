@@ -10,6 +10,8 @@ public class InputService
     public IObservable<Vector2> MoveStream { get; }
     public IObservable<bool> RunStream { get; }
     public IObservable<Unit> AttackStream { get; }
+    public IObservable<bool> ShieldStream { get; }
+    public IObservable<Unit> SubmitStream { get; }
 
     public InputService()
     {
@@ -25,6 +27,14 @@ public class InputService
 
         AttackStream = Observable.EveryUpdate()
             .Where(_ => InputActions.Player.Attack.WasPerformedThisFrame())
+            .AsUnitObservable();
+
+        ShieldStream = Observable.EveryUpdate()
+            .Select(_ => InputActions.Player.Shield.IsPressed())
+            .DistinctUntilChanged();
+
+        SubmitStream = Observable.EveryUpdate()
+            .Where(_ => InputActions.Player.Submit.WasPerformedThisFrame())
             .AsUnitObservable();
     }
 }

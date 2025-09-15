@@ -13,6 +13,7 @@ namespace State.PlayerState
 
         private Vector2 _moveInput;
         private bool _runHeld;
+        private bool _shieldHeld;
         public bool AttackPressed { get; set; }
 
         public PlayerStateRunner(PlayerMVCFacade facade)
@@ -22,13 +23,15 @@ namespace State.PlayerState
             // “ü—Íw“Ç
             _facade.MoveStream.Subscribe(mv => _moveInput = mv).AddTo(_facade.View);
             _facade.RunStream.Subscribe(run => _runHeld = run).AddTo(_facade.View);
+            _facade.ShieldStream.Subscribe(shield => _shieldHeld = shield).AddTo(_facade.View);
             _facade.AttackStream.Subscribe(_ => AttackPressed = true).AddTo(_facade.View);
 
             // ó‘Ô‚ð“o˜^
-            _states[StateKey.Idle] = new IdleState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
-            _states[StateKey.Walk] = new WalkState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
-            _states[StateKey.Run] = new RunningState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed);
+            _states[StateKey.Idle] = new IdleState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed, () => _shieldHeld);
+            _states[StateKey.Walk] = new WalkState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed, () => _shieldHeld);
+            _states[StateKey.Run] = new RunningState(_facade, this, () => _moveInput, () => _runHeld, () => AttackPressed, () => _shieldHeld);
             _states[StateKey.Attack] = new AttackState(_facade, this);
+            _states[StateKey.Shield] = new ShieldState(_facade, this, () => _moveInput, () => _runHeld, () => _shieldHeld);
         }
 
         public void Start()

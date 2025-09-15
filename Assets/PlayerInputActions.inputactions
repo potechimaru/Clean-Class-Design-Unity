@@ -24,9 +24,27 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Shield",
+                    "type": "Button",
+                    "id": "dffd2527-36e4-440d-a2de-04ebc128c551",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Run",
                     "type": "Button",
                     "id": "b63b7705-f25a-4a5c-8987-e1400694c603",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Submit",
+                    "type": "Button",
+                    "id": "a394140b-43bd-422b-9475-dfd6d059f149",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -152,6 +170,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44395333-5731-427b-8e68-3acb0919dad1",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a244bd9f-a552-49eb-a935-227013dbde9c",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Shield",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

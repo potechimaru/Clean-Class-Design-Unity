@@ -49,6 +49,11 @@ public class PlayerMVCFacade
         _view.UpdateMoneyPossession(_model.MoneyPossession);
     }   
 
+    public void ShiftShowShield(bool show)
+    {
+        _view.ShiftShowShield(show);
+    }
+
     public Animator Animator => _view.Animator;
 
     public PlayerView View => _view;

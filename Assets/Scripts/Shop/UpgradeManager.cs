@@ -8,6 +8,10 @@ public class UpgradeManager
 
     public int AttackLevel { get; private set; } = 1;
     public int ShieldLevel { get; private set; } = 1;
+    public int HpLevel { get; private set; } = 1;
+    public int BeamLevel { get; private set; } = 1;
+
+
 
     public void TryUpgradeAttack()
     {
@@ -36,6 +40,28 @@ public class UpgradeManager
         else
         {
             Debug.Log("Not enough money for Shield upgrade!");
+        }
+    }
+
+    public void TryUpgradeBeam()
+    {
+        int cost = _upgradeCostConfig.GetBeamCost(BeamLevel);
+        if (cost > 0 && _facade.MoneyPossession >= cost)
+        {
+            _facade.UpdateMoneyPossesion(-cost);
+            BeamLevel++;
+            Debug.Log($"Beam upgraded! New level: {BeamLevel}");
+        }
+    }
+
+    public void TryUpgradeHp()
+    {
+        int cost = _upgradeCostConfig.GetHPCost(HpLevel);
+        if (cost > 0 && _facade.MoneyPossession >= cost)
+        {
+            _facade.UpdateMoneyPossesion(-cost);
+            HpLevel++;
+            Debug.Log($"Hp upgraded! New level: {HpLevel}");
         }
     }
 }

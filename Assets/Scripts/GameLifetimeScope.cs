@@ -31,6 +31,8 @@ public class GameLifetimeScope : LifetimeScope
 
     [SerializeField] private AttackUpgradeButton _attackUpgradeButton;
     [SerializeField] private ShieldUpgradeButton _shieldUpgradeButton;
+    [SerializeField] private BeamUpgradeButton _beamUpgradeButton;
+    [SerializeField] private HPUpgradeButton _hpUpgradeButton;
 
 
     protected override void Configure(IContainerBuilder builder)
@@ -92,6 +94,8 @@ public class GameLifetimeScope : LifetimeScope
 
         builder.RegisterComponent(_attackUpgradeButton);
         builder.RegisterComponent(_shieldUpgradeButton);
+        builder.RegisterComponent(_hpUpgradeButton);
+        builder.RegisterComponent(_beamUpgradeButton);
 
 
     }

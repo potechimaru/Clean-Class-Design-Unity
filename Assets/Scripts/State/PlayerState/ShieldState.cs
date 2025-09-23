@@ -26,6 +26,7 @@ namespace State.PlayerState
         public async UniTask Enter()
         {
             Debug.Log("Enter Shield State");
+            _facade.ShiftShowShield(true);
             _facade.PlayAnimation("Defend", 0.02f);
             _facade.Velocity = Vector3.zero;
         }
@@ -38,6 +39,9 @@ namespace State.PlayerState
             }
         }
 
-        public async UniTask Exit() { }
+        public async UniTask Exit() 
+        {
+            _facade.ShiftShowShield(false);
+        }
     }
 }

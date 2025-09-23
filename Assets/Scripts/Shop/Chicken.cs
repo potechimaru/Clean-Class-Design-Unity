@@ -2,25 +2,33 @@ using UnityEngine;
 using DG.Tweening;
 using UniRx;
 using VContainer;
+using System.Collections.Generic;
 
 public class Chicken : MonoBehaviour
 {
     [SerializeField] private GameObject swordIcon;
-    [SerializeField] private GameObject grayBack;     // Grayバック
-    [SerializeField] private RectTransform shopPanel; // メニュー本体（にゅいん用）
+    [SerializeField] private GameObject grayBack;
+
+    [SerializeField] private List<RectTransform> shopPanels;
+
+    [SerializeField] private RectTransform _nextButtomLeft;
+    [SerializeField] private RectTransform _nextButtomRight;
 
     private CanvasGroup swordIconCanvasGroup;
     private CanvasGroup grayBackCanvasGroup;
-    private CanvasGroup shopPanelCanvasGroup;
+    private List<CanvasGroup> shopPanelCanvasGroups = new List<CanvasGroup>();
+    private CanvasGroup nextButtomLeftCanvasGroup;
+    private CanvasGroup nextButtomRightCanvasGroup;
 
     private bool isShowing = false;
     private bool playerInRange = false;
     private bool shopOpen = false;
 
     [Inject] private PlayerMVCFacade _facade;
-
     [Inject] private AttackUpgradeButton _attackUpgradeButton;
-    [Inject] private ShieldUpgradeButton _shieldUpgradeButton;  
+    [Inject] private ShieldUpgradeButton _shieldUpgradeButton;
+    [Inject] private HPUpgradeButton _hpUpgradeButton;
+    [Inject] private BeamUpgradeButton _beamUpgradeButton;
 
     private CompositeDisposable disposables = new();
 
@@ -30,10 +38,7 @@ public class Chicken : MonoBehaviour
         if (swordIcon != null)
         {
             swordIcon.SetActive(false);
-            swordIconCanvasGroup = swordIcon.GetComponent<CanvasGroup>();
-            if (swordIconCanvasGroup == null)
-                swordIconCanvasGroup = swordIcon.AddComponent<CanvasGroup>();
-
+            swordIconCanvasGroup = swordIcon.GetComponent<CanvasGroup>() ?? swordIcon.AddComponent<CanvasGroup>();
             swordIconCanvasGroup.alpha = 0f;
             swordIcon.transform.localScale = Vector3.zero;
         }
@@ -42,21 +47,32 @@ public class Chicken : MonoBehaviour
         if (grayBack != null)
         {
             grayBack.SetActive(false);
-            grayBackCanvasGroup = grayBack.GetComponent<CanvasGroup>();
-            if (grayBackCanvasGroup == null)
-                grayBackCanvasGroup = grayBack.AddComponent<CanvasGroup>();
+            grayBackCanvasGroup = grayBack.GetComponent<CanvasGroup>() ?? grayBack.AddComponent<CanvasGroup>();
             grayBackCanvasGroup.alpha = 0f;
         }
 
-        // ShopPanel 初期化
-        if (shopPanel != null)
+        // 複数 ShopPanel 初期化
+        foreach (var panel in shopPanels)
         {
-            shopPanel.gameObject.SetActive(false);
-            shopPanelCanvasGroup = shopPanel.GetComponent<CanvasGroup>();
-            if (shopPanelCanvasGroup == null)
-                shopPanelCanvasGroup = shopPanel.gameObject.AddComponent<CanvasGroup>();
-            shopPanelCanvasGroup.alpha = 0f;
-            shopPanel.localScale = Vector3.zero;
+            if (panel == null) continue;
+            panel.gameObject.SetActive(false);
+            var cg = panel.GetComponent<CanvasGroup>() ?? panel.gameObject.AddComponent<CanvasGroup>();
+            cg.alpha = 0f;
+            panel.localScale = Vector3.zero;
+            shopPanelCanvasGroups.Add(cg);
+        }
+
+        // ボタン初期化
+        if (_nextButtomLeft != null)
+        {
+            nextButtomLeftCanvasGroup = _nextButtomLeft.GetComponent<CanvasGroup>() ?? _nextButtomLeft.gameObject.AddComponent<CanvasGroup>();
+            nextButtomLeftCanvasGroup.alpha = 0f;
+        }
+
+        if (_nextButtomRight != null)
+        {
+            nextButtomRightCanvasGroup = _nextButtomRight.GetComponent<CanvasGroup>() ?? _nextButtomRight.gameObject.AddComponent<CanvasGroup>();
+            nextButtomRightCanvasGroup.alpha = 0f;
         }
     }
 
@@ -67,7 +83,6 @@ public class Chicken : MonoBehaviour
             ShowSwordIcon();
             playerInRange = true;
 
-            // Space キー監視
             _facade.SubmitStream
                 .Where(_ => playerInRange)
                 .Subscribe(_ => ToggleShop())
@@ -119,26 +134,42 @@ public class Chicken : MonoBehaviour
 
     private void OpenShop()
     {
-        if (grayBack == null || shopPanel == null || shopOpen) return;
+        if (grayBack == null || shopPanels.Count == 0 || shopOpen) return;
         _attackUpgradeButton.LevelViewChange();
         _shieldUpgradeButton.LevelViewChange();
+        _hpUpgradeButton.LevelViewChange();
+        _beamUpgradeButton.LevelViewChange();
 
         shopOpen = true;
 
-        // GrayBack表示＆フェード
         grayBack.SetActive(true);
         grayBackCanvasGroup.alpha = 0f;
         grayBackCanvasGroup.DOFade(1f, 0.3f);
 
-        // ShopPanel表示＆にゅいん!!
-        shopPanel.gameObject.SetActive(true);
-        shopPanel.localScale = Vector3.zero;
-        shopPanelCanvasGroup.alpha = 0f;
+        // すべての shopPanel をアニメーション表示
+        foreach (var panel in shopPanels)
+        {
+            panel.gameObject.SetActive(true);
+            panel.localScale = Vector3.zero;
+        }
+        foreach (var cg in shopPanelCanvasGroups)
+        {
+            cg.alpha = 0f;
+        }
+        foreach (var panel in shopPanels)
+        {
+            panel.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
+        }
+        foreach (var cg in shopPanelCanvasGroups)
+        {
+            cg.DOFade(1f, 0.3f);
+        }
 
-        shopPanel.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
-        shopPanelCanvasGroup.DOFade(1f, 0.3f);
+        _nextButtomLeft.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
+        nextButtomLeftCanvasGroup.DOFade(1f, 0.4f);
 
-        //Debug.Log("Shop menu opened!");
+        _nextButtomRight.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
+        nextButtomRightCanvasGroup.DOFade(1f, 0.4f);
     }
 
     private void CloseShop()
@@ -147,16 +178,24 @@ public class Chicken : MonoBehaviour
 
         shopOpen = false;
 
-        // GrayBackフェードアウト
         grayBackCanvasGroup.DOFade(0f, 0.3f)
             .OnComplete(() => grayBack.SetActive(false));
 
-        // ShopPanel縮小＋フェードアウト
-        shopPanelCanvasGroup.DOFade(0f, 0.3f);
-        shopPanel.DOScale(0f, 0.3f).SetEase(Ease.InBack)
-            .OnComplete(() => shopPanel.gameObject.SetActive(false));
+        // すべての shopPanel をアニメーション非表示
+        for (int i = 0; i < shopPanels.Count; i++)
+        {
+            var panel = shopPanels[i];
+            var cg = shopPanelCanvasGroups[i];
+            cg.DOFade(0f, 0.3f);
+            panel.DOScale(0f, 0.3f).SetEase(Ease.InBack)
+                .OnComplete(() => panel.gameObject.SetActive(false));
+        }
 
-        //Debug.Log("Shop menu closed!");
+        nextButtomLeftCanvasGroup.DOFade(0f, 0.3f);
+        _nextButtomLeft.DOScale(0f, 0.3f).SetEase(Ease.InBack);
+
+        nextButtomRightCanvasGroup.DOFade(0f, 0.3f);
+        _nextButtomRight.DOScale(0f, 0.3f).SetEase(Ease.InBack);
     }
 
     private void OnDestroy()

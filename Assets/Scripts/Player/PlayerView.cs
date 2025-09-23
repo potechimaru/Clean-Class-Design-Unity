@@ -13,6 +13,7 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private LayerMask _enemyLayer;
     [SerializeField] private HPBar _hpBar;
     [SerializeField] private TextMeshProUGUI _moneyUI;
+    [SerializeField] private GameObject _shieldObject;
 
     private CharacterController _cc;
 
@@ -106,6 +107,14 @@ public class PlayerView : MonoBehaviour
     {
 
         _moneyUI.text = _model.MoneyPossession.ToString("N0");
+    }
+
+    public void ShiftShowShield(bool show)
+    {
+        if (_shieldObject != null)
+        {
+            _shieldObject.SetActive(show);
+        }
     }
 
     void OnDrawGizmosSelected()

@@ -33,6 +33,12 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField] private ShieldUpgradeButton _shieldUpgradeButton;
     [SerializeField] private BeamUpgradeButton _beamUpgradeButton;
     [SerializeField] private HPUpgradeButton _hpUpgradeButton;
+    [SerializeField] private GetLowHealButton _getLowHealButton;
+    [SerializeField] private GetHighHealButton _getHighHealButton;
+    [SerializeField] private GetFullHealButton _getFullHealButton;
+    [SerializeField] private GetRemedyButton _getRemedyButton;
+    [SerializeField] private GetPowerBuffButton _getPowerBuffButton;
+    [SerializeField] private GetSpeedBuffButton _getSpeedBuffButton;
 
 
     protected override void Configure(IContainerBuilder builder)
@@ -91,12 +97,19 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponent(_chicken);
 
         builder .Register<UpgradeManager>(Lifetime.Singleton).AsSelf();
-
+        builder.Register<GetItemManager>(Lifetime.Singleton).AsSelf();
+        
         builder.RegisterComponent(_attackUpgradeButton);
         builder.RegisterComponent(_shieldUpgradeButton);
         builder.RegisterComponent(_hpUpgradeButton);
         builder.RegisterComponent(_beamUpgradeButton);
 
+        builder.RegisterComponent(_getLowHealButton);
+        builder.RegisterComponent(_getHighHealButton);
+        builder.RegisterComponent(_getFullHealButton);
+        builder.RegisterComponent(_getRemedyButton);
+        builder.RegisterComponent(_getPowerBuffButton);
+        builder.RegisterComponent(_getSpeedBuffButton);
 
     }
 }

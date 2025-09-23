@@ -24,7 +24,7 @@ public class UpgradeCostConfig : ScriptableObject
     [SerializeField] private int[] SpeedBuff;
 
     /// <summary>
-    /// Žw’è‚µ‚½ƒŒƒxƒ‹‚É•K—v‚ÈƒRƒXƒg‚ð•Ô‚·
+    /// ï¿½wï¿½è‚µï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½É•Kï¿½vï¿½ÈƒRï¿½Xï¿½gï¿½ï¿½Ô‚ï¿½
     /// </summary>
     public int GetAttackCost(int level)
     {
@@ -51,6 +51,48 @@ public class UpgradeCostConfig : ScriptableObject
     {
         if (level - 1 >= 0 && level - 1 < HPCosts.Length)
             return HPCosts[level - 1];
+        return -1;
+    }
+
+    public int GetLowHealCost(int level)
+    {
+        if (level - 1 >= 0 && level - 1 < lowHealCosts.Length)
+            return lowHealCosts[level - 1];
+        return -1;
+    }
+
+    public int GetHighHealCost(int level)
+    {
+        if (level - 1 >= 0 && level - 1 < highHealCosts.Length)
+            return highHealCosts[level - 1];
+        return -1;
+    }
+
+    public int GetFullHealCost(int level)
+    {
+        if (level - 1 >= 0 && level - 1 < fullHealCosts.Length)
+            return fullHealCosts[level - 1];
+        return -1;
+    }
+
+    public int GetRemedyCost(int level)
+    {
+        if (level - 1 >= 0 && level - 1 < RemedyCosts.Length)
+            return RemedyCosts[level - 1];
+        return -1;
+    }
+
+    public int GetPowerBuffCost(int level)
+    {
+        if (level - 1 >= 0 && level - 1 < PowerBuff.Length)
+            return PowerBuff[level - 1];
+        return -1;
+    }
+
+    public int GetSpeedBuffCost(int level)
+    {
+        if (level - 1 >= 0 && level - 1 < SpeedBuff.Length)
+            return SpeedBuff[level - 1];
         return -1;
     }
 

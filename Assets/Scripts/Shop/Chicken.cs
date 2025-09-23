@@ -29,12 +29,18 @@ public class Chicken : MonoBehaviour
     [Inject] private ShieldUpgradeButton _shieldUpgradeButton;
     [Inject] private HPUpgradeButton _hpUpgradeButton;
     [Inject] private BeamUpgradeButton _beamUpgradeButton;
+    [Inject] private GetLowHealButton _getLowHealButton;
+    [Inject] private GetHighHealButton _getHighHealButton;
+    [Inject] private GetFullHealButton _getFullHealButton;
+    [Inject] private GetRemedyButton _getRemedyButton;
+    [Inject] private GetPowerBuffButton _getPowerBuffButton;
+    [Inject] private GetSpeedBuffButton _getSpeedBuffButton;
 
     private CompositeDisposable disposables = new();
 
     private void Awake()
     {
-        // SwordIcon ‰Šú‰»
+        // SwordIcon ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (swordIcon != null)
         {
             swordIcon.SetActive(false);
@@ -43,7 +49,7 @@ public class Chicken : MonoBehaviour
             swordIcon.transform.localScale = Vector3.zero;
         }
 
-        // GrayBack ‰Šú‰»
+        // GrayBack ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (grayBack != null)
         {
             grayBack.SetActive(false);
@@ -51,7 +57,7 @@ public class Chicken : MonoBehaviour
             grayBackCanvasGroup.alpha = 0f;
         }
 
-        // •¡” ShopPanel ‰Šú‰»
+        // ï¿½ï¿½ï¿½ï¿½ ShopPanel ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         foreach (var panel in shopPanels)
         {
             if (panel == null) continue;
@@ -62,7 +68,7 @@ public class Chicken : MonoBehaviour
             shopPanelCanvasGroups.Add(cg);
         }
 
-        // ƒ{ƒ^ƒ“‰Šú‰»
+        // ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (_nextButtomLeft != null)
         {
             nextButtomLeftCanvasGroup = _nextButtomLeft.GetComponent<CanvasGroup>() ?? _nextButtomLeft.gameObject.AddComponent<CanvasGroup>();
@@ -139,6 +145,12 @@ public class Chicken : MonoBehaviour
         _shieldUpgradeButton.LevelViewChange();
         _hpUpgradeButton.LevelViewChange();
         _beamUpgradeButton.LevelViewChange();
+        _getLowHealButton.CostViewChange();
+        _getHighHealButton.CostViewChange();
+        _getFullHealButton.CostViewChange();
+        //_getRemedyButton.CostViewChange();
+        _getPowerBuffButton.CostViewChange();
+        _getSpeedBuffButton.CostViewChange();
 
         shopOpen = true;
 
@@ -146,7 +158,7 @@ public class Chicken : MonoBehaviour
         grayBackCanvasGroup.alpha = 0f;
         grayBackCanvasGroup.DOFade(1f, 0.3f);
 
-        // ‚·‚×‚Ä‚Ì shopPanel ‚ğƒAƒjƒ[ƒVƒ‡ƒ“•\¦
+        // ï¿½ï¿½ï¿½×‚Ä‚ï¿½ shopPanel ï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½
         foreach (var panel in shopPanels)
         {
             panel.gameObject.SetActive(true);
@@ -181,7 +193,7 @@ public class Chicken : MonoBehaviour
         grayBackCanvasGroup.DOFade(0f, 0.3f)
             .OnComplete(() => grayBack.SetActive(false));
 
-        // ‚·‚×‚Ä‚Ì shopPanel ‚ğƒAƒjƒ[ƒVƒ‡ƒ“”ñ•\¦
+        // ï¿½ï¿½ï¿½×‚Ä‚ï¿½ shopPanel ï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½
         for (int i = 0; i < shopPanels.Count; i++)
         {
             var panel = shopPanels[i];

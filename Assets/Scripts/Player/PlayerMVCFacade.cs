@@ -17,7 +17,7 @@ public class PlayerMVCFacade
     }
 
     // -------------------
-    // PlayerView ‚ÌˆÏ÷
+    // PlayerView ï¿½ÌˆÏï¿½
     // -------------------
     public void ApplyPlanarSpeed(Vector2 input, float speed)
     {
@@ -39,7 +39,7 @@ public class PlayerMVCFacade
         var enemies = _view.GetEnemies();
         foreach (var enemy in enemies)
         {
-            enemy.TakeDamage(_model.AttackDamage); // ƒ_ƒ[ƒW’l‚Í‰¼
+            enemy.TakeDamage(_model.AttackDamage); // ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½lï¿½Í‰ï¿½
         }
     }
 
@@ -60,7 +60,7 @@ public class PlayerMVCFacade
 
 
     // -------------------
-    // PlayerModel ‚ÌˆÏ÷
+    // PlayerModel ï¿½ÌˆÏï¿½
     // -------------------
     public float WalkSpeed => _model.WalkSpeed;
     public float RunSpeed => _model.RunSpeed;
@@ -78,12 +78,28 @@ public class PlayerMVCFacade
         // Debug.Log(_model.NormalizedHp);
     }
 
+    public void Heal(float amount)
+    {
+        _model.Heal(amount);
+        _view.UpdateHpBar();
+    }
+
+    public void PowerBuff(float amount)
+    {
+        _model.PowerBuff(amount);
+    }
+
+    public void SpeedBuff(float amount)
+    {
+        _model.SpeedBuff(amount);
+    }
+
     public int MoneyPossession => _model.MoneyPossession;
 
 
 
     // -------------------
-    // InputService‚ÌƒXƒgƒŠ[ƒ€‚ğŒöŠJ
+    // InputServiceï¿½ÌƒXï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½J
     // -------------------
     public IObservable<Vector2> MoveStream => _input.MoveStream;
     public IObservable<bool> RunStream => _input.RunStream;

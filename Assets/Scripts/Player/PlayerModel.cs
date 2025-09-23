@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerModel
 {
-    // ----•¨—Œn ----
+    // ----ï¿½ï¿½ï¿½ï¿½ï¿½n ----
     public float WalkSpeed { get; private set; } = 3.5f;
     public float RunSpeed { get; private set; } = 6.5f;
     public float Gravity { get; private set; } = -18f;
@@ -10,10 +10,10 @@ public class PlayerModel
     public bool IsGrounded { get; set; } = true;
     public Vector3 Velocity { get; set; } = Vector3.zero;
 
-    // ---- í“¬Œn ----
+    // ---- ï¿½í“¬ï¿½n ----
     public float AttackDamage { get; private set; } = 25f;
 
-    // ---- HP ŠÇ— ----
+    // ---- HP ï¿½Ç—ï¿½ ----
     public float MaxHp { get; private set; } = 100f;
     public float CurrentHp { get; private set; }
 
@@ -28,7 +28,7 @@ public class PlayerModel
     }
 
     /// <summary>
-    /// ScriptableObject ‚È‚Ç‚ÌŠO•”İ’è‚ğ“K—p‚µ‚½‚¢‚Æ‚«‚Ég—pi”CˆÓj
+    /// ScriptableObject ï¿½È‚Ç‚ÌŠOï¿½ï¿½ï¿½İ’ï¿½ï¿½Kï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Égï¿½pï¿½iï¿½Cï¿½Ój
     /// </summary>
     public void SetupFromConfig(PlayerConfig cfg)
     {
@@ -44,7 +44,7 @@ public class PlayerModel
     }
 
     /// <summary>
-    /// ƒ_ƒ[ƒW‚ğó‚¯‚éBÀÛ‚ÉŒ¸‚Á‚½—Ê‚ğ•Ô‚·B
+    /// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ó‚¯‚ï¿½Bï¿½ï¿½ï¿½Û‚ÉŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½Ô‚ï¿½ï¿½B
     /// </summary>
     public float TakeDamage(float amount)
     {
@@ -57,7 +57,7 @@ public class PlayerModel
     }
 
     /// <summary>
-    /// ‰ñ•œ‚·‚éBÀÛ‚É‰ñ•œ‚µ‚½—Ê‚ğ•Ô‚·B
+    /// ï¿½ñ•œ‚ï¿½ï¿½ï¿½Bï¿½ï¿½ï¿½Û‚É‰ñ•œ‚ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½Ô‚ï¿½ï¿½B
     /// </summary>
     public float Heal(float amount)
     {
@@ -68,8 +68,18 @@ public class PlayerModel
         return CurrentHp - before;
     }
 
+    public void PowerBuff(float amount)
+    {
+        AttackDamage = amount;
+    }
+
+    public void SpeedBuff(float amount)
+    {
+        WalkSpeed = amount;
+    }
+
     /// <summary>
-    /// HP ‚ğÅ‘å‚Ü‚Å‰ñ•œB
+    /// HP ï¿½ï¿½ï¿½Å‘ï¿½Ü‚Å‰ñ•œB
     /// </summary>
     public void ResetHp() => CurrentHp = MaxHp;
 }

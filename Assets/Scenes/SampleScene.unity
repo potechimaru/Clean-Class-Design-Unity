@@ -5506,6 +5506,7 @@ GameObject:
   - component: {fileID: 359893726}
   - component: {fileID: 359893728}
   - component: {fileID: 359893727}
+  - component: {fileID: 359893729}
   m_Layer: 5
   m_Name: LvUpButton
   m_TagString: Untagged
@@ -5572,6 +5573,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 359893725}
   m_CullTransparentMesh: 1
+--- !u!114 &359893729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359893725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e18b60d1009d149a613ab73cd98743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &366634369
 GameObject:
   m_ObjectHideFlags: 0
@@ -16499,6 +16512,7 @@ GameObject:
   - component: {fileID: 950736469}
   - component: {fileID: 950736471}
   - component: {fileID: 950736470}
+  - component: {fileID: 950736472}
   m_Layer: 5
   m_Name: LvUpButton
   m_TagString: Untagged
@@ -16565,6 +16579,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 950736468}
   m_CullTransparentMesh: 1
+--- !u!114 &950736472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950736468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05bdea6266b905246a0f9766ba4da9fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cost: {fileID: 2033949379}
 --- !u!1 &962447536
 GameObject:
   m_ObjectHideFlags: 0
@@ -24522,6 +24549,7 @@ GameObject:
   - component: {fileID: 1323105814}
   - component: {fileID: 1323105816}
   - component: {fileID: 1323105815}
+  - component: {fileID: 1323105817}
   m_Layer: 5
   m_Name: LvUpButton
   m_TagString: Untagged
@@ -24588,6 +24616,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1323105813}
   m_CullTransparentMesh: 1
+--- !u!114 &1323105817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323105813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c53ef0b4e32ef04d90b2dd11a9321e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cost: {fileID: 1208431411}
 --- !u!1 &1326915255
 GameObject:
   m_ObjectHideFlags: 0
@@ -27074,6 +27115,7 @@ GameObject:
   - component: {fileID: 1428977764}
   - component: {fileID: 1428977766}
   - component: {fileID: 1428977765}
+  - component: {fileID: 1428977767}
   m_Layer: 5
   m_Name: LvUpButton
   m_TagString: Untagged
@@ -27140,6 +27182,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428977763}
   m_CullTransparentMesh: 1
+--- !u!114 &1428977767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428977763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2022146d19841f54db34d088540f046d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cost: {fileID: 1564552172}
 --- !u!1 &1438560791
 GameObject:
   m_ObjectHideFlags: 0
@@ -36518,6 +36573,7 @@ GameObject:
   - component: {fileID: 1798677262}
   - component: {fileID: 1798677264}
   - component: {fileID: 1798677263}
+  - component: {fileID: 1798677265}
   m_Layer: 5
   m_Name: LvUpButton
   m_TagString: Untagged
@@ -36584,6 +36640,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798677261}
   m_CullTransparentMesh: 1
+--- !u!114 &1798677265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1798677261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b27303c3bfc0c499e4abb18f5cb612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cost: {fileID: 609552115}
 --- !u!1 &1811968266
 GameObject:
   m_ObjectHideFlags: 0
@@ -36811,6 +36880,7 @@ GameObject:
   - component: {fileID: 1833908757}
   - component: {fileID: 1833908759}
   - component: {fileID: 1833908758}
+  - component: {fileID: 1833908760}
   m_Layer: 5
   m_Name: LvUpButton
   m_TagString: Untagged
@@ -36877,6 +36947,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1833908756}
   m_CullTransparentMesh: 1
+--- !u!114 &1833908760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833908756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9e99b56ad297646b7d96a6293e694f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cost: {fileID: 1637521757}
 --- !u!1 &1846526795
 GameObject:
   m_ObjectHideFlags: 0
@@ -41479,6 +41562,12 @@ MonoBehaviour:
   _shieldUpgradeButton: {fileID: 1858491132}
   _beamUpgradeButton: {fileID: 828267000}
   _hpUpgradeButton: {fileID: 1232901272}
+  _getLowHealButton: {fileID: 1428977767}
+  _getHighHealButton: {fileID: 1323105817}
+  _getFullHealButton: {fileID: 1833908760}
+  _getRemedyButton: {fileID: 359893729}
+  _getPowerBuffButton: {fileID: 1798677265}
+  _getSpeedBuffButton: {fileID: 950736472}
 --- !u!1 &2120269828
 GameObject:
   m_ObjectHideFlags: 0

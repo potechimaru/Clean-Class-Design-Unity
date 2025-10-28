@@ -10,7 +10,7 @@ public class SlimePool : MonoBehaviour
 
     private IObjectPool<Slime> _pool;
     [Inject] private IObjectResolver _resolver;
-    [Inject] private PlayerMVCFacade _playerMVCFacade;
+    [Inject] private PlayerFacade _playerMVCFacade;
 
     private void Start()
     {

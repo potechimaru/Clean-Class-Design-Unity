@@ -67,7 +67,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<PlayerController>(Lifetime.Singleton).As<ITickable>().AsSelf(); ;
         builder.Register<InputService>(Lifetime.Singleton);
 
-        builder.Register<PlayerMVCFacade>(Lifetime.Singleton);
+        builder.Register<PlayerFacade>(Lifetime.Singleton);
 
         // Factory
         builder.RegisterComponent(_slimeFactory);

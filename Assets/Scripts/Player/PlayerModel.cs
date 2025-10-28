@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerModel
 {
-    // ----�����n ----
     public float WalkSpeed { get; private set; } = 3.5f;
     public float RunSpeed { get; private set; } = 6.5f;
     public float Gravity { get; private set; } = -18f;
@@ -10,10 +9,8 @@ public class PlayerModel
     public bool IsGrounded { get; set; } = true;
     public Vector3 Velocity { get; set; } = Vector3.zero;
 
-    // ---- �퓬�n ----
     public float AttackDamage { get; private set; } = 25f;
 
-    // ---- HP �Ǘ� ----
     public float MaxHp { get; private set; } = 100f;
     public float CurrentHp { get; private set; }
 
@@ -28,7 +25,7 @@ public class PlayerModel
     }
 
     /// <summary>
-    /// ScriptableObject �Ȃǂ̊O���ݒ��K�p�������Ƃ��Ɏg�p�i�C�Ӂj
+    /// ScriptableObject
     /// </summary>
     public void SetupFromConfig(PlayerConfig cfg)
     {
@@ -43,9 +40,6 @@ public class PlayerModel
         CurrentHp = Mathf.Min(CurrentHp, MaxHp);
     }
 
-    /// <summary>
-    /// �_���[�W���󂯂�B���ۂɌ������ʂ�Ԃ��B
-    /// </summary>
     public float TakeDamage(float amount)
     {
         if (IsDead) return 0f;
@@ -56,9 +50,6 @@ public class PlayerModel
         return before - CurrentHp;
     }
 
-    /// <summary>
-    /// �񕜂���B���ۂɉ񕜂����ʂ�Ԃ��B
-    /// </summary>
     public float Heal(float amount)
     {
         if (IsDead) return 0f;
@@ -78,8 +69,5 @@ public class PlayerModel
         WalkSpeed = amount;
     }
 
-    /// <summary>
-    /// HP ���ő�܂ŉ񕜁B
-    /// </summary>
     public void ResetHp() => CurrentHp = MaxHp;
 }

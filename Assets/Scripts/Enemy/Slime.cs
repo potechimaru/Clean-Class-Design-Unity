@@ -11,10 +11,10 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     private Animator _anim;
     private IEnemyConfig _config;
     private Transform _target;
-    private PlayerMVCFacade _playerMVCFacade;
-
+    private PlayerFacade _playerMVCFacade;
     private float _hp;
-    private IObjectPool<Slime> _pool; // プール参照
+    private IObjectPool<Slime> _pool;
+
     [Inject] private IObjectResolver _resolver;
     [Inject] private CoinFactory _coinFactory;
 
@@ -28,11 +28,8 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
-        Debug.Log($"{name} Awake, agent={_agent}", this);
-
         _anim = GetComponent<Animator>();
-        StateMachine = new EnemyStateRunner();
-
+        EnemyView = GetComponent<EnemyView>();
 
         if (_agent != null)
         {
@@ -40,23 +37,22 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
             _agent.updatePosition = true;
             _agent.autoBraking = true;
         }
-
-        EnemyView = GetComponent<EnemyView>();
     }
 
-
-    /// <summary>
-    /// プール側から呼ばれる：返却先を保持
-    /// </summary>
     public void SetPool(IObjectPool<Slime> pool) => _pool = pool;
 
-    public void Initialize(IEnemyConfig config, Transform target, PlayerMVCFacade playerMVCFacade)
+    public void Initialize(
+        IEnemyConfig config,
+        Transform target,
+        PlayerFacade playerMVCFacade,
+        EnemyStateRunner stateMachine)
     {
         _config = config;
         _target = target;
         _playerMVCFacade = playerMVCFacade;
         _hp = _config.MaxHp;
         IsDead = false;
+        StateMachine = stateMachine;
 
         if (EnemyView != null)
         {
@@ -71,20 +67,12 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
 
         UpdateDestination();
 
-        StateMachine = _resolver.Resolve<EnemyStateRunner>();
-        StateMachine.AddState(StateKey.Idle, new EnemyIdleState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Walk, new EnemyWalkState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Attack, new EnemyAttackState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Dead, new EnemyDeadState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Hurt, new EnemyHurtState(this, _anim, StateMachine));
-
-
+        // 初期State設定
         StateMachine.ChangeState(StateKey.Walk);
     }
 
     public async UniTask TakeDamage(float amount)
     {
-        Debug.Log($"{name} took {amount} damage.", this);
         if (IsDead) return;
         _hp -= amount;
 
@@ -92,25 +80,18 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
         EnemyView?.ShowDamage((int)amount, transform.position);
 
         if (_hp <= 0f)
-        {
             await Die();
-        }
         else
-        {
             StateMachine.ChangeState(StateKey.Hurt);
-        }
     }
 
     public void Tick(float deltaTime)
     {
         if (IsDead || _config == null) return;
-
         if (_target && _agent && !_agent.isStopped)
-        {
             UpdateDestination();
-        }
 
-        StateMachine.Tick(deltaTime);
+        StateMachine?.Tick(deltaTime);
     }
 
     public void MoveToTarget(float _) => UpdateDestination();
@@ -119,52 +100,33 @@ public class Slime : MonoBehaviour, IEnemy, IEnemyTick
     {
         if (_target == null || _agent == null) return false;
         if (_agent.pathPending) return false;
-
         return _agent.remainingDistance <= _agent.stoppingDistance;
     }
 
     private void UpdateDestination()
     {
         if (_agent != null && _agent.enabled && _target != null)
-        {
             _agent.SetDestination(_target.position);
-        }
     }
 
     private async UniTask Die()
     {
-        //Debug.Log($"{name} is dying.", this);
         IsDead = true;
-
-        if (_agent != null)
-        {
-            _agent.isStopped = true;
-            _agent.ResetPath();
-        }
-
+        _agent.isStopped = true;
+        _agent.ResetPath();
 
         StateMachine.ChangeState(StateKey.Dead);
 
-        await UniTask.Yield();
-
-        while (_anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
-            await UniTask.Yield();
-
-        Debug.Log("Slime died!");
+        await UniTask.WaitUntil(() =>
+            _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
         _coinFactory.Create(transform.position, _config.DropMoney);
-
-        // Destroyせずプールに返却
         _pool?.Release(this);
     }
 
     public void HitPlayer()
-    {
-        _playerMVCFacade?.TakeDamage(_config.AttackDamage);
-    }
+        => _playerMVCFacade?.TakeDamage(_config.AttackDamage);
 
-
-    // プール返却時に呼ばれる
     private void OnDisable()
     {
         if (_agent != null)

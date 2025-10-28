@@ -9,14 +9,14 @@ namespace State.PlayerState
     {
         private readonly Dictionary<StateKey, IPlayerState> _states = new();
         private IPlayerState _currentState;
-        private readonly PlayerMVCFacade _facade;
+        private readonly PlayerFacade _facade;
 
         private Vector2 _moveInput;
         private bool _runHeld;
         private bool _shieldHeld;
         public bool AttackPressed { get; set; }
 
-        public PlayerStateRunner(PlayerMVCFacade facade)
+        public PlayerStateRunner(PlayerFacade facade)
         {
             _facade = facade;
 

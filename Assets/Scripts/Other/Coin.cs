@@ -6,7 +6,7 @@ public class Coin : MonoBehaviour
 {
     private IObjectPool<Coin> _pool;
     private int _amount;
-    [Inject] private PlayerMVCFacade _playerMVCFacade;
+    [Inject] private PlayerFacade _playerMVCFacade;
 
     public void SetPool(IObjectPool<Coin> pool) => _pool = pool;
 

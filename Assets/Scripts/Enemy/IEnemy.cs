@@ -1,9 +1,10 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
+using State.EnemyState;
+using UnityEngine;
 
 public interface IEnemy
 {
-    void Initialize(IEnemyConfig config, Transform target, PlayerMVCFacade playerMVCFacade);
+    void Initialize(IEnemyConfig config, Transform target, PlayerFacade playerMVCFacade, EnemyStateRunner stateMachine);
     UniTask TakeDamage(float amount);
     bool IsDead { get; }
 

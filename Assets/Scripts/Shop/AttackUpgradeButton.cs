@@ -6,7 +6,7 @@ using VContainer;
 public class AttackUpgradeButton : MonoBehaviour, IPointerClickHandler
 {
     [Inject] private UpgradeManager upgradeManager;
-    [Inject] private PlayerMVCFacade _playerMVCFacade;
+    [Inject] private PlayerFacade _playerMVCFacade;
     [Inject] private UpgradeCostConfig _upgradeCostConfig;
     [SerializeField] private TextMeshProUGUI _lv;
     [SerializeField] private TextMeshProUGUI _cost;

@@ -10,10 +10,10 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     private Animator _anim;
     private IEnemyConfig _config;
     private Transform _target;
-    private PlayerMVCFacade _playerMVCFacade;
+    private PlayerFacade _playerMVCFacade;
 
     private float _hp;
-    private IObjectPool<Turtle> _pool; // プール参照
+    private IObjectPool<Turtle> _pool;
 
     [SerializeField] private float _attackRange = 1.5f;
 
@@ -25,11 +25,13 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     {
         _agent = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
-        StateMachine = new EnemyStateRunner();
 
-        _agent.updateRotation = true;
-        _agent.updatePosition = true;
-        _agent.autoBraking = true;
+        if (_agent != null)
+        {
+            _agent.updateRotation = true;
+            _agent.updatePosition = true;
+            _agent.autoBraking = true;
+        }
     }
 
     /// <summary>
@@ -37,13 +39,17 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     /// </summary>
     public void SetPool(IObjectPool<Turtle> pool) => _pool = pool;
 
-    public void Initialize(IEnemyConfig config, Transform target, PlayerMVCFacade playerMVCFacade)
+    /// <summary>
+    /// Manager側から初期化＋StateMachine注入
+    /// </summary>
+    public void Initialize(IEnemyConfig config, Transform target, PlayerFacade playerMVCFacade, EnemyStateRunner stateMachine)
     {
         _config = config;
         _target = target;
         _playerMVCFacade = playerMVCFacade;
         _hp = _config.MaxHp;
         IsDead = false;
+        StateMachine = stateMachine;
 
         _agent.enabled = true;
         _agent.speed = _config.MoveSpeed;
@@ -52,10 +58,7 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
 
         UpdateDestination();
 
-        StateMachine.AddState(StateKey.Idle, new EnemyIdleState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Walk, new EnemyWalkState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Attack, new EnemyAttackState(this, _anim, StateMachine));
-        StateMachine.AddState(StateKey.Dead, new EnemyDeadState(this, _anim, StateMachine));
+        // Manager側で構築済みのStateMachineを受け取る
         StateMachine.ChangeState(StateKey.Idle);
     }
 
@@ -63,7 +66,11 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     {
         if (IsDead) return;
         _hp -= amount;
-        if (_hp <= 0f) await Die();
+
+        if (_hp <= 0f)
+            await Die();
+        else
+            StateMachine.ChangeState(StateKey.Hurt);
     }
 
     public void Tick(float deltaTime)
@@ -71,11 +78,9 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
         if (IsDead || _config == null) return;
 
         if (_target && _agent && !_agent.isStopped)
-        {
             UpdateDestination();
-        }
 
-        StateMachine.Tick(deltaTime);
+        StateMachine?.Tick(deltaTime);
     }
 
     public void MoveToTarget(float _) => UpdateDestination();
@@ -91,9 +96,7 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     private void UpdateDestination()
     {
         if (_agent != null && _agent.enabled && _target != null)
-        {
             _agent.SetDestination(_target.position);
-        }
     }
 
     private async UniTask Die()
@@ -107,21 +110,16 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
             _agent.ResetPath();
         }
 
-
         StateMachine.ChangeState(StateKey.Dead);
 
-        await UniTask.Yield();
-
-        while (_anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
-            await UniTask.Yield();
+        await UniTask.WaitUntil(() =>
+            _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
 
         Debug.Log("Turtle died!");
 
-        // Destroyせずプールに返却
         _pool?.Release(this);
     }
 
-    // プール返却時に呼ばれる
     private void OnDisable()
     {
         if (_agent != null)

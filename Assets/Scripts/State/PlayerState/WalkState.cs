@@ -7,14 +7,14 @@ namespace State.PlayerState
 {
     public class WalkState : IPlayerState
     {
-        private readonly PlayerMVCFacade _facade;
+        private readonly PlayerFacade _facade;
         private readonly IStateController _stateController;
         private readonly Func<Vector2> _moveGetter;
         private readonly Func<bool> _runGetter;
         private readonly Func<bool> _attackGetter;
         private readonly Func<bool> _shieldGetter;
 
-        public WalkState(PlayerMVCFacade facade, IStateController stateController,
+        public WalkState(PlayerFacade facade, IStateController stateController,
                          Func<Vector2> moveGetter, Func<bool> runGetter, Func<bool> attackGetter, Func<bool> shieldGetter)
         {
             _facade = facade;

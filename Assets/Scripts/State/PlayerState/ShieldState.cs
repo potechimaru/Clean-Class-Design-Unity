@@ -7,13 +7,13 @@ namespace State.PlayerState
 {
     public class ShieldState : IPlayerState
     {
-        private readonly PlayerMVCFacade _facade;
+        private readonly PlayerFacade _facade;
         private readonly IStateController _stateController;
         private readonly Func<Vector2> _moveGetter;
         private readonly Func<bool> _runGetter;
         private readonly Func<bool> _shieldGetter;
 
-        public ShieldState(PlayerMVCFacade facade, IStateController stateController,
+        public ShieldState(PlayerFacade facade, IStateController stateController,
                          Func<Vector2> moveGetter, Func<bool> runGetter, Func<bool> shieldGetter)
         {
             _facade = facade;

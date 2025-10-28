@@ -9,7 +9,7 @@ public class TurtlePool : MonoBehaviour
     [SerializeField] private int _defaultCapacity = 5;
     [SerializeField] private int _maxSize = 50;
 
-    [Inject] private PlayerMVCFacade _playerMVCFacade;
+    [Inject] private PlayerFacade _playerMVCFacade;
     private IObjectPool<Turtle> _pool;
 
     private void Awake()

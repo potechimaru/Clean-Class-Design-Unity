@@ -7,7 +7,7 @@ public class GetSpeedBuffButton: MonoBehaviour, IPointerClickHandler
 {
     [Inject] private readonly GetItemManager _getItemManager;
     [Inject] private readonly UpgradeCostConfig _upgradeCostConfig;
-    [Inject] private readonly PlayerMVCFacade _playerMVCFade;
+    [Inject] private readonly PlayerFacade _playerMVCFade;
     [SerializeField] private TextMeshProUGUI _cost;
 
     public void OnPointerClick(PointerEventData eventData)

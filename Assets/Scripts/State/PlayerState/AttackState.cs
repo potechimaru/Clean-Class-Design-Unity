@@ -6,12 +6,12 @@ using static Unity.Collections.Unicode;
 
 public class AttackState : IPlayerState
 {
-    private readonly PlayerMVCFacade _facade;
+    private readonly PlayerFacade _facade;
     private readonly IStateController _stateController;
 
     private int comboStep = 1;
 
-    public AttackState(PlayerMVCFacade facade, IStateController stateController)
+    public AttackState(PlayerFacade facade, IStateController stateController)
     {
         _facade = facade;
         _stateController = stateController;

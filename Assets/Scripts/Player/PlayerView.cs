@@ -5,7 +5,6 @@ using TMPro;
 
 public class PlayerView : MonoBehaviour
 {
-    [Inject] private PlayerModel _model;
     [Inject] private SlashEffectFactory _slashEffectFactory;
     [SerializeField] private Animator _anim;
     [SerializeField] private float _attackRange = 2f;     // 前方距離
@@ -15,6 +14,8 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _moneyUI;
     [SerializeField] private GameObject _shieldObject;
 
+    private PlayerController _controller;
+
     private CharacterController _cc;
 
     void Awake()
@@ -23,14 +24,14 @@ public class PlayerView : MonoBehaviour
     }
 
     // 状態から呼ばれる：水平方向の希望速度を渡す
+    // PlayerView.cs
     public void ApplyPlanarSpeed(Vector2 input, float speed)
     {
-        // 横方向の目標速度（ワールドX Z）
         var plan = new Vector3(input.x, 0f, input.y) * speed;
-        var velocity = _model.Velocity;
+        var velocity = _controller.GetPlayerModel().Velocity;
         velocity.x = plan.x;
         velocity.z = plan.z;
-        _model.Velocity = velocity;
+        _controller.GetPlayerModel().Velocity = velocity;
 
         if (plan.sqrMagnitude > 0.0001f)
         {
@@ -39,26 +40,18 @@ public class PlayerView : MonoBehaviour
         }
     }
 
-    // 毎フレームの最終移動（重力適用込み）
     public void CommitMovement(float deltaTime)
     {
-        // Ground 判定は CC に任せる
-        _model.IsGrounded = _cc.isGrounded;
+        _controller.GetPlayerModel().IsGrounded = _cc.isGrounded;
 
-        var velocity = _model.Velocity;
-
-        if (_model.IsGrounded && velocity.y < 0f)
-            velocity.y = -2f; // 地面に吸着
-
-        // 重力
-        velocity.y += _model.Gravity * deltaTime;
-
-        // 実移動
+        var velocity = _controller.GetPlayerModel().Velocity;
+        if (_controller.GetPlayerModel().IsGrounded && velocity.y < 0f)
+            velocity.y = -2f;
+        velocity.y += _controller.GetPlayerModel().Gravity * deltaTime;
         _cc.Move(velocity * deltaTime);
-
-        _model.Velocity = velocity;
-
+        _controller.GetPlayerModel().Velocity = velocity;
     }
+
 
     /// <summary>
     /// 前方の球範囲にいるIEnemyを取得
@@ -86,7 +79,7 @@ public class PlayerView : MonoBehaviour
         var enemies = GetEnemies();
         foreach (var enemy in enemies)
         {
-            enemy.TakeDamage(_model.AttackDamage);
+            enemy.TakeDamage(_controller.GetPlayerModel().AttackDamage);
         }
 
         Vector3 effectPos = transform.position + transform.forward * _attackRange * 0.5f;
@@ -99,14 +92,14 @@ public class PlayerView : MonoBehaviour
         if (_hpBar != null)
         {
             //Debug.Log(_model.NormalizedHp);
-            _hpBar.SetFill(_model.NormalizedHp);
+            _hpBar.SetFill(_controller.GetPlayerModel().NormalizedHp);
         }
     }
 
     public void UpdateMoneyPossession(int amount)
     {
 
-        _moneyUI.text = _model.MoneyPossession.ToString("N0");
+        _moneyUI.text = _controller.GetPlayerModel().MoneyPossession.ToString("N0");
     }
 
     public void ShiftShowShield(bool show)
@@ -127,4 +120,9 @@ public class PlayerView : MonoBehaviour
 
 
     public Animator Animator => _anim;
+
+    public void SetPlayerController(PlayerController controller)
+    {
+        _controller = controller;
+    }
 }

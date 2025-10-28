@@ -7,7 +7,7 @@ public class GetPowerBuffButton: MonoBehaviour, IPointerClickHandler
 {
     [Inject] private readonly GetItemManager _getItemManager;
     [Inject] private readonly UpgradeCostConfig _upgradeCostConfig;
-    [Inject] private readonly PlayerMVCFacade _playerMVCFacade;
+    [Inject] private readonly PlayerFacade _playerMVCFacade;
     [SerializeField] private TextMeshProUGUI _cost;
 
     public void OnPointerClick(PointerEventData eventData)

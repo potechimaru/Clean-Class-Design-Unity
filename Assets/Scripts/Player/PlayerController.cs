@@ -13,6 +13,7 @@ public class PlayerController : ITickable
     {
         _view = view;
         _model = model;
+        _view.SetPlayerController(this);
     }
 
     public void Tick()
@@ -21,4 +22,14 @@ public class PlayerController : ITickable
         _view.ApplyPlanarSpeed(MoveInput, speed);
         _view.CommitMovement(Time.deltaTime);
     }
+
+    public PlayerModel GetPlayerModel()
+    {
+        return _model;
+    }   
+
+    public PlayerView GetPlayerView()
+    {
+        return _view;
+    }   
 }

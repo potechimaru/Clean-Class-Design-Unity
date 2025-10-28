@@ -4,7 +4,7 @@ using VContainer;
 public class GetItemManager
 {
     [Inject] private UpgradeCostConfig _upgradeCostConfig;
-    [Inject] private PlayerMVCFacade _playerMVCFacade;
+    [Inject] private PlayerFacade _playerMVCFacade;
 
     public int LowHealCount { get; private set; } = 1;
     public int HighHealCount { get; private set; } = 1;

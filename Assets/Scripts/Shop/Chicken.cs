@@ -24,7 +24,7 @@ public class Chicken : MonoBehaviour
     private bool playerInRange = false;
     private bool shopOpen = false;
 
-    [Inject] private PlayerMVCFacade _facade;
+    [Inject] private PlayerFacade _facade;
     [Inject] private AttackUpgradeButton _attackUpgradeButton;
     [Inject] private ShieldUpgradeButton _shieldUpgradeButton;
     [Inject] private HPUpgradeButton _hpUpgradeButton;

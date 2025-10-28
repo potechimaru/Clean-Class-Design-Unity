@@ -4,7 +4,7 @@ using VContainer;
 public class UpgradeManager
 {
     [Inject] private UpgradeCostConfig _upgradeCostConfig;
-    [Inject] private PlayerMVCFacade _facade;
+    [Inject] private PlayerFacade _facade;
 
     public int AttackLevel { get; private set; } = 1;
     public int ShieldLevel { get; private set; } = 1;

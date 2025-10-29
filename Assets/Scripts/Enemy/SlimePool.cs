@@ -10,14 +10,12 @@ public class SlimePool : MonoBehaviour
 
     private IObjectPool<Slime> _pool;
     [Inject] private IObjectResolver _resolver;
-    [Inject] private PlayerFacade _playerMVCFacade;
 
     private void Start()
     {
         _pool = new ObjectPool<Slime>(
             createFunc: () =>
             {
-                Debug.Log($"Create Slime, resolver={_resolver}");
                 var slime = Instantiate(_prefab, transform);
                 slime.gameObject.SetActive(false);
                 slime.SetPool(_pool);
@@ -43,11 +41,10 @@ public class SlimePool : MonoBehaviour
         );
     }
 
-    public Slime Get(Vector3 pos, Quaternion rot, SlimeConfig config, Transform target)
+    public Slime Get(Vector3 pos, Quaternion rot)
     {
         var slime = _pool.Get();
         slime.transform.SetPositionAndRotation(pos, rot);
-        slime.Initialize(config, target, _playerMVCFacade);
         return slime;
     }
 

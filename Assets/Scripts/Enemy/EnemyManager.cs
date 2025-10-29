@@ -18,22 +18,36 @@ public class EnemyManager : ITickable
 
     public void Register(Slime slime, IEnemyConfig config, Transform target, PlayerFacade player)
     {
-        // StateMachine¶¬
-        var runner = _resolver.Resolve<EnemyStateRunner>();
-
-        // State“o˜^iSlime‚ÉˆË‘¶’“üÏ‚İj
-        var anim = slime.GetComponent<Animator>();
-        runner.AddState(StateKey.Idle, new EnemyIdleState(slime, anim, runner));
-        runner.AddState(StateKey.Walk, new EnemyWalkState(slime, anim, runner));
-        runner.AddState(StateKey.Attack, new EnemyAttackState(slime, anim, runner));
-        runner.AddState(StateKey.Hurt, new EnemyHurtState(slime, anim, runner));
-        runner.AddState(StateKey.Dead, new EnemyDeadState(slime, anim, runner));
-
-        // Slime‰Šú‰»
+        var runner = CreateStateRunner(slime);
         slime.Initialize(config, target, player, runner);
+        AddEnemy(slime);
+    }
 
-        if (!_enemies.Contains(slime))
-            _enemies.Add(slime);
+    public void Register(Turtle turtle, IEnemyConfig config, Transform target, PlayerFacade player)
+    {
+        var runner = CreateStateRunner(turtle);
+        turtle.Initialize(config, target, player, runner);
+        AddEnemy(turtle);
+    }
+
+    private void AddEnemy(IEnemyTick enemy)
+    {
+        if (!_enemies.Contains(enemy))
+            _enemies.Add(enemy);
+    }
+
+    private EnemyStateRunner CreateStateRunner(IEnemy enemy)
+    {
+        var runner = _resolver.Resolve<EnemyStateRunner>();
+        var anim = (enemy as MonoBehaviour)?.GetComponent<Animator>();
+
+        runner.AddState(StateKey.Idle, new EnemyIdleState(enemy, anim, runner));
+        runner.AddState(StateKey.Walk, new EnemyWalkState(enemy, anim, runner));
+        runner.AddState(StateKey.Attack, new EnemyAttackState(enemy, anim, runner));
+        runner.AddState(StateKey.Hurt, new EnemyHurtState(enemy, anim, runner));
+        runner.AddState(StateKey.Dead, new EnemyDeadState(enemy, anim, runner));
+
+        return runner;
     }
 
     public void Unregister(IEnemyTick enemy)

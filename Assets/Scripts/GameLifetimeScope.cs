@@ -9,8 +9,6 @@ public class GameLifetimeScope : LifetimeScope
 {
     [SerializeField] private PlayerView _playerView;
 
-    [SerializeField] private SlimeFactory _slimeFactory;
-    [SerializeField] private TurtleFactory _turtleFactory;
     [SerializeField] private CoinFactory _coinFactory;
     [SerializeField] private SlashEffectFactory _slashEffectFactory;
 
@@ -64,14 +62,14 @@ public class GameLifetimeScope : LifetimeScope
 
         builder.Register<PlayerModel>(Lifetime.Singleton);
         builder.RegisterComponent(_playerView);
-        builder.Register<PlayerController>(Lifetime.Singleton).As<ITickable>().AsSelf(); ;
+        builder.Register<PlayerController>(Lifetime.Singleton).As<ITickable>().AsSelf(); 
         builder.Register<InputService>(Lifetime.Singleton);
 
         builder.Register<PlayerFacade>(Lifetime.Singleton);
 
         // Factory
-        builder.RegisterComponent(_slimeFactory);
-        builder.RegisterComponent(_turtleFactory);
+        builder.Register<SlimeFactory>(Lifetime.Singleton).As<IInitializable>().AsSelf();
+        builder.Register<TurtleFactory>(Lifetime.Singleton).As<IInitializable>().AsSelf();
         builder.RegisterComponent(_coinFactory);
         builder.RegisterComponent(_slashEffectFactory);
 

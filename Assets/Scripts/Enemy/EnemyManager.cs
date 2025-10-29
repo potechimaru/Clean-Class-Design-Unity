@@ -39,7 +39,7 @@ public class EnemyManager : ITickable
     private EnemyStateRunner CreateStateRunner(IEnemy enemy)
     {
         var runner = _resolver.Resolve<EnemyStateRunner>();
-        var anim = (enemy as MonoBehaviour)?.GetComponent<Animator>();
+        var anim = (enemy as MonoBehaviour).GetComponent<Animator>();
 
         runner.AddState(StateKey.Idle, new EnemyIdleState(enemy, anim, runner));
         runner.AddState(StateKey.Walk, new EnemyWalkState(enemy, anim, runner));

@@ -57,6 +57,8 @@ public class PlayerFacade
 
     public Animator Animator => _controller.GetPlayerView().Animator;
 
+    public Transform Transform => _controller.GetPlayerView().GetPlayerTransform();
+
     public PlayerView View => _controller.GetPlayerView();
 
 

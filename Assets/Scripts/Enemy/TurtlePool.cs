@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
 using VContainer;
@@ -9,7 +8,8 @@ public class TurtlePool : MonoBehaviour
     [SerializeField] private int _defaultCapacity = 5;
     [SerializeField] private int _maxSize = 50;
 
-    [Inject] private PlayerFacade _playerMVCFacade;
+    [Inject] private IObjectResolver _resolver;
+
     private IObjectPool<Turtle> _pool;
 
     private void Awake()
@@ -20,6 +20,7 @@ public class TurtlePool : MonoBehaviour
                 var turtle = Instantiate(_prefab, transform);
                 turtle.gameObject.SetActive(false);
                 turtle.SetPool(_pool);
+                _resolver.Inject(turtle);
                 return turtle;
             },
             actionOnGet: (turtle) =>
@@ -41,11 +42,13 @@ public class TurtlePool : MonoBehaviour
         );
     }
 
-    public Turtle Get(Vector3 pos, Quaternion rot, TurtleConfig config, Transform target)
+    /// <summary>
+    /// TurtleÇê∂ê¨Åièâä˙âªÇÕEnemyManagerë§Ç≈çsÇ§Åj
+    /// </summary>
+    public Turtle Get(Vector3 pos, Quaternion rot)
     {
         var turtle = _pool.Get();
         turtle.transform.SetPositionAndRotation(pos, rot);
-        turtle.Initialize(config, target, _playerMVCFacade);
         return turtle;
     }
 

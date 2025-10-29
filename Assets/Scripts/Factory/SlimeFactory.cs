@@ -1,14 +1,20 @@
 using UnityEngine;
 using VContainer;
+using VContainer.Unity;
 
-public class SlimeFactory : MonoBehaviour, IEnemyFactory
+public class SlimeFactory : IEnemyFactory, IInitializable
 {
     [Inject] private SlimePool _pool;
     [Inject] private SlimeConfig _config;
     [Inject] private EnemyManager _enemyManager;
     [Inject] private PlayerFacade _playerMVCFacade;
 
-    [SerializeField] private Transform _defaultTarget;
+    private Transform _defaultTarget;
+
+    public void Initialize()
+    {
+        _defaultTarget = _playerMVCFacade.Transform;
+    }
 
     public IEnemy Create(Vector3 position, Quaternion rotation)
     {

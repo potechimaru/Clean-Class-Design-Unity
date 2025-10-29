@@ -11,7 +11,6 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
     private IEnemyConfig _config;
     private Transform _target;
     private PlayerFacade _playerMVCFacade;
-
     private float _hp;
     private IObjectPool<Turtle> _pool;
 
@@ -34,13 +33,10 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
         }
     }
 
-    /// <summary>
-    /// ƒv[ƒ‹‘¤‚©‚çŒÄ‚Î‚ê‚éF•Ô‹pæ‚ğ•Û
-    /// </summary>
     public void SetPool(IObjectPool<Turtle> pool) => _pool = pool;
 
     /// <summary>
-    /// Manager‘¤‚©‚ç‰Šú‰»{StateMachine’“ü
+    /// EnemyManager‚©‚çŒÄ‚Î‚ê‚é‰Šú‰»
     /// </summary>
     public void Initialize(IEnemyConfig config, Transform target, PlayerFacade playerMVCFacade, EnemyStateRunner stateMachine)
     {
@@ -58,15 +54,14 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
 
         UpdateDestination();
 
-        // Manager‘¤‚Å\’zÏ‚İ‚ÌStateMachine‚ğó‚¯æ‚é
         StateMachine.ChangeState(StateKey.Idle);
     }
 
     public async UniTask TakeDamage(float amount)
     {
         if (IsDead) return;
-        _hp -= amount;
 
+        _hp -= amount;
         if (_hp <= 0f)
             await Die();
         else
@@ -101,7 +96,6 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
 
     private async UniTask Die()
     {
-        Debug.Log($"{name} is dying.", this);
         IsDead = true;
 
         if (_agent != null)
@@ -114,8 +108,6 @@ public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
 
         await UniTask.WaitUntil(() =>
             _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
-
-        Debug.Log("Turtle died!");
 
         _pool?.Release(this);
     }

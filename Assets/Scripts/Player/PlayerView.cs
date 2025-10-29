@@ -121,6 +121,11 @@ public class PlayerView : MonoBehaviour
 
     public Animator Animator => _anim;
 
+    public Transform GetPlayerTransform()
+    {
+        return transform;
+    }
+
     public void SetPlayerController(PlayerController controller)
     {
         _controller = controller;

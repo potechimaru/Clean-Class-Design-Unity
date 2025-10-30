@@ -4,7 +4,7 @@ using UnityEngine.Pool;
 using State.EnemyState;
 using Cysharp.Threading.Tasks;
 
-public class Turtle : MonoBehaviour, IEnemy, IEnemyTick
+public class Turtle : MonoBehaviour, IEnemy
 {
     private NavMeshAgent _agent;
     private Animator _anim;

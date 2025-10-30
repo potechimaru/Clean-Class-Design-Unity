@@ -5,7 +5,7 @@ using VContainer.Unity;
 public class SlimeFactory : IEnemyFactory, IInitializable
 {
     [Inject] private SlimePool _pool;
-    [Inject] private SlimeConfig _config;
+    [Inject] private IEnemyConfigFacade _config;
     [Inject] private EnemyManager _enemyManager;
     [Inject] private PlayerFacade _playerMVCFacade;
 
@@ -18,9 +18,9 @@ public class SlimeFactory : IEnemyFactory, IInitializable
 
     public IEnemy Create(Vector3 position, Quaternion rotation)
     {
-        var slime = _pool.Get(position, rotation);
+        Slime slime = _pool.Get(position, rotation);
 
-        _enemyManager.Register(slime, _config, _defaultTarget, _playerMVCFacade);
+        _enemyManager.Register(slime, _config.GetSlimeConfig(), _defaultTarget, _playerMVCFacade);
         return slime;
     }
 }

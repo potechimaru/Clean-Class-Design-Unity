@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec23e85080434f42ab0bdfedc3d2dca, type: 3}
   m_Name: WaveConfig
   m_EditorClassIdentifier: 
-  enemies:
-  - enemyType: 0
-    spawnTime: 0
-    spawnPosition: {x: 7, y: 0.5, z: 14}
+  _enemies:
   - enemyType: 0
     spawnTime: 1
-    spawnPosition: {x: 7, y: 0.5, z: 14}
+    spawnPosition: {x: 0, y: 0, z: 0}
+  - enemyType: 0
+    spawnTime: 0
+    spawnPosition: {x: 5, y: 0, z: 5}

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.Pool;
 using VContainer;
 
-public class Slime : MonoBehaviour, IEnemy, IEnemyTick
+public class Slime : MonoBehaviour, IEnemy
 {
     private NavMeshAgent _agent;
     private Animator _anim;

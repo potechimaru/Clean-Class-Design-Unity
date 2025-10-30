@@ -7,7 +7,7 @@ using State.EnemyState;
 public class EnemyManager : ITickable
 {
     private readonly IObjectResolver _resolver;
-    private readonly List<IEnemyTick> _enemies = new();
+    private readonly List<IEnemy> _enemies = new();
 
     public bool GameEnd { get; set; }
 
@@ -16,21 +16,14 @@ public class EnemyManager : ITickable
         _resolver = resolver;
     }
 
-    public void Register(Slime slime, IEnemyConfig config, Transform target, PlayerFacade player)
+    public void Register(IEnemy enemy, IEnemyConfig config, Transform target, PlayerFacade player)
     {
-        var runner = CreateStateRunner(slime);
-        slime.Initialize(config, target, player, runner);
-        AddEnemy(slime);
+        var runner = CreateStateRunner(enemy);
+        enemy.Initialize(config, target, player, runner);
+        AddEnemy(enemy);
     }
 
-    public void Register(Turtle turtle, IEnemyConfig config, Transform target, PlayerFacade player)
-    {
-        var runner = CreateStateRunner(turtle);
-        turtle.Initialize(config, target, player, runner);
-        AddEnemy(turtle);
-    }
-
-    private void AddEnemy(IEnemyTick enemy)
+    private void AddEnemy(IEnemy enemy)
     {
         if (!_enemies.Contains(enemy))
             _enemies.Add(enemy);
@@ -50,7 +43,7 @@ public class EnemyManager : ITickable
         return runner;
     }
 
-    public void Unregister(IEnemyTick enemy)
+    public void Unregister(IEnemy enemy)
     {
         _enemies.Remove(enemy);
     }

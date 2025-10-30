@@ -1,6 +1,7 @@
 using State.EnemyState;
 using State.GameState;
 using State.PlayerState;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -73,6 +74,21 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterComponent(_coinFactory);
         builder.RegisterComponent(_slashEffectFactory);
 
+        // EnemyFactoryRegistry“o˜^
+        builder.Register<EnemyFactoryRegistry>(resolver =>
+        {
+            var slimeFactory = resolver.Resolve<SlimeFactory>();
+            var turtleFactory = resolver.Resolve<TurtleFactory>();
+
+            var dict = new Dictionary<EnemyType, IEnemyFactory>
+        {
+            { EnemyType.Slime, slimeFactory },
+            { EnemyType.Turtle, turtleFactory },
+        };
+
+            return new EnemyFactoryRegistry(dict);
+        }, Lifetime.Singleton);
+
         // Pool
         builder.RegisterComponent(_slimePool);
         builder.RegisterComponent(_turtlePool);
@@ -87,8 +103,9 @@ public class GameLifetimeScope : LifetimeScope
         // Config
         builder.RegisterInstance(_slimeConfig);
         builder.RegisterInstance(_turtleConfig);
-        builder.RegisterInstance(_waveConfig);
+        builder.RegisterInstance(_waveConfig).As<IWaveConfig>();
         builder.RegisterInstance(_upgradeCostConfig);
+        builder.Register<EnemyConfigFacade>(Lifetime.Singleton).As<IEnemyConfigFacade>();
 
         builder.RegisterComponent(_cameraFollow).As<ITickable>().AsSelf();
 

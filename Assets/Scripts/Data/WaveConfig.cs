@@ -1,8 +1,15 @@
 using UnityEngine;
 
+public interface IWaveConfig
+{
+    EnemySpawnData[] enemies { get; }
+}
+
 [CreateAssetMenu(menuName = "Waves/WaveConfig")]
-public class WaveConfig : ScriptableObject
+public class WaveConfig : ScriptableObject, IWaveConfig
 {
     [Header("敵の出現データリスト")]
-    public EnemySpawnData[] enemies;
+    [SerializeField] private EnemySpawnData[] _enemies;
+
+    public EnemySpawnData[] enemies => _enemies;
 }

@@ -5,7 +5,7 @@ using VContainer.Unity;
 public class TurtleFactory : IEnemyFactory, IInitializable
 {
     [Inject] private TurtlePool _pool;
-    [Inject] private TurtleConfig _config;
+    [Inject] private IEnemyConfigFacade _config;
     [Inject] private EnemyManager _enemyManager;
     [Inject] private PlayerFacade _playerMVCFacade;
 
@@ -18,8 +18,8 @@ public class TurtleFactory : IEnemyFactory, IInitializable
 
     public IEnemy Create(Vector3 position, Quaternion rotation)
     {
-        var turtle = _pool.Get(position, rotation);
-        _enemyManager.Register(turtle, _config, _defaultTarget, _playerMVCFacade);
+        Turtle turtle = _pool.Get(position, rotation);
+        _enemyManager.Register(turtle, _config.GetTurtleConfig(), _defaultTarget, _playerMVCFacade);
         return turtle;
     }
 }

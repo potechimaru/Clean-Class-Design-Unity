@@ -11,4 +11,6 @@ public interface IEnemy
     bool CanAttackTarget();
 
     void MoveToTarget(float dt);
+
+    void Tick(float deltaTime);
 }

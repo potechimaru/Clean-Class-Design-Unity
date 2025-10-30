@@ -13,6 +13,7 @@ namespace State.GameState
 
         public async UniTask Enter()
         {
+            await UniTask.CompletedTask;
 
             //Debug.Log("GameOpeningState: Enter");
         }
@@ -23,6 +24,7 @@ namespace State.GameState
         }
         public async UniTask Exit()
         {
+            await UniTask.CompletedTask;
             //Debug.Log("GameOpeningState: Exit");
         }
     }

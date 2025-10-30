@@ -6,20 +6,18 @@ using VContainer.Unity;
 
 public class WaveRunner : IStartable, IDisposable
 {
-    private readonly WaveConfig _waveConfig;
-    private readonly SlimeFactory _slimeFactory;
-    private readonly TurtleFactory _turtleFactory;
+    private readonly IWaveConfig _waveConfig;
+    private readonly EnemyFactoryRegistry _enemyFactoryRegistry;
 
     private CancellationTokenSource _cts;
 
     public WaveRunner(
-        WaveConfig waveConfig,
-        SlimeFactory slimeFactory,
-        TurtleFactory turtleFactory)
+        IWaveConfig waveConfig,
+        EnemyFactoryRegistry enemyFactoryRegistry
+        )
     {
         _waveConfig = waveConfig;
-        _slimeFactory = slimeFactory;
-        _turtleFactory = turtleFactory;
+        _enemyFactoryRegistry = enemyFactoryRegistry;
     }
 
     public void Start()
@@ -51,16 +49,8 @@ public class WaveRunner : IStartable, IDisposable
 
             if (token.IsCancellationRequested) break;
 
-            switch (enemy.enemyType)
-            {
-                case EnemyType.Slime:
-                    _slimeFactory.Create(enemy.spawnPosition, Quaternion.identity);
-                    break;
+            _enemyFactoryRegistry.Create(enemy.enemyType, enemy.spawnPosition, Quaternion.identity);
 
-                case EnemyType.Turtle:
-                    _turtleFactory.Create(enemy.spawnPosition, Quaternion.identity);
-                    break;
-            }
         }
     }
 }
